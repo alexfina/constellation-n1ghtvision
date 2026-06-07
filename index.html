@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Constellation</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="module" src="./app.js" defer></script>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <p class="eyebrow">CONSTELLATION V0.8</p>
+        <h1>Find your next pick.</h1>
+      </section>
+
+      <section class="panel" aria-label="Recommendation filters">
+        <div class="filters">
+          <label class="field">
+            <span>Region</span>
+            <select id="region-select" name="region">
+              <option value="">Loading regions...</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Platform</span>
+            <select id="platform-select" name="platform">
+              <option value="">Loading platforms...</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Type</span>
+            <select id="type-select" name="type">
+              <option value="">All Types</option>
+              <option value="movie">Movies</option>
+              <option value="series">Series</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Genre</span>
+            <select id="genre-select" name="genre">
+              <option value="">Loading genres...</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Rating</span>
+            <select id="rating-select" name="rating">
+              <option value="">All Ratings</option>
+              <option value="7">7.0+</option>
+              <option value="8">8.0+</option>
+              <option value="9">9.0+</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="actions">
+          <button id="reveal-button" type="button">Reveal recommendations</button>
+          <p id="status" class="status" role="status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section class="results" aria-label="Recommendation results">
+        <div class="results-header">
+          <div id="selection-map" class="selection-map" aria-hidden="true"></div>
+          <p id="result-context" class="result-context" aria-live="polite"></p>
+        </div>
+        <div id="results-grid" class="results-grid"></div>
+      </section>
+    </main>
+  </body>
+</html>

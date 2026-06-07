@@ -1,0 +1,155 @@
+# Constellation Run Log
+
+- Result count moved above astroid markers.
+- Astroid markers moved closer to cards.
+- Old line/dots remain removed.
+- Card behavior, filters, background, hero, and styling unchanged.
+- Astroid visibility fixed with a dark black/navy tint.
+- Astroid SVG path verified as ../assets/icons/astroid.svg.
+- Astroids placed above the results shell with explicit stacking.
+- Old line/dots remain removed.
+- Card behavior, filters, background, hero, and app logic unchanged except decoration visibility/path.
+- Old constellation line/dots removed from the results decoration.
+- Local astroid SVG decoration added above result cards.
+- Decoration aligns with result card columns.
+- Card behavior, filters, background, hero, and app logic unchanged except decoration rendering.
+- Native dropdown visuals lightly polished.
+- Native select behavior preserved.
+- No custom dropdown rebuild added.
+- Filter logic, cards, background, hero, and app behavior unchanged.
+- Card glass tint shifted slightly cooler.
+- Fade-out updated if needed to match cooler card surface.
+- Pill tint adjusted only if needed.
+- Card behavior, posters, filters, background, hero, and app logic unchanged.
+- Card description fade changed from overlay gradient to mask-based text fade.
+- Rectangular fade block removed.
+- Card color, pills, layout, behavior, filters, background, hero, and app logic unchanged.
+- Card description fade-out cleaned up.
+- Rating/genre pills softened for the warm glass card style.
+- Card color, layout, behavior, posters, filters, background, hero, and app logic unchanged.
+- Cards tested with the same warm frosted-glass material as the shell/filter panels.
+- Card border/shadow strengthened for separation.
+- Fade-out updated if needed.
+- Poster behavior, card behavior, filters, background, hero, and app logic unchanged.
+- Cards shifted from warm smoke-gray to cool blue-gray glass.
+- Card separation from results shell improved.
+- Fade-out updated if needed.
+- Poster behavior, card behavior, filters, background, hero, and app logic unchanged.
+- Individual movie cards darkened into warm smoke-gray glass.
+- Fade-out updated to match the new card surface.
+- Poster behavior unchanged.
+- Card behavior, filters, background, and app logic unchanged.
+- Individual movie cards converted to light frosted-glass test style.
+- Card text, pills, fade-out, and chevrons adjusted for light-card contrast.
+- Poster behavior unchanged.
+- Card height and expand/collapse behavior unchanged.
+- Filter panel, results shell, background, hero, app logic, and data unchanged.
+- Individual movie cards refined with subtle dark-glass styling.
+- Poster behavior unchanged.
+- Card height and expand/collapse behavior unchanged.
+- Filter panel, results shell, background, hero, app logic, and data unchanged.
+- Filter labels darkened for readability on glass panel.
+- Filter helper text darkened.
+- Result count and TMDB attribution darkened.
+- Reveal button adjusted for better contrast.
+- Cards, background, layout, and app behavior unchanged.
+- Filter panel changed to warm frosted-glass style.
+- Results shell changed to warm frosted-glass style.
+- Individual movie cards intentionally left unchanged.
+- Background image, hero, app logic, filters, and card behavior unchanged.
+- Hero title reduced to a smaller fixed size.
+- Spacing added between hero title and filter panel.
+- Version label unchanged.
+- Cards, filters, background, and app behavior unchanged.
+- TMDB candidate builder now uses AT-only discover/provider filtering with configurable page and candidate limits.
+- Candidate type classification now includes anime when TMDB animation entries have Japanese origin.
+- Anime candidates now also carry an anime genre tag so the Genre dropdown can filter them.
+- Anime type labels were removed; type now stays movie or series while anime remains a genre tag.
+- Type filter added with All Types, Movies, and Series options.
+- Type filter combines with Region, Platform, Genre, and Rating.
+- Five-filter desktop layout refined into one clean row.
+- Filter logic unchanged; Type filter remains active.
+- UI styling, cards, background, and data unchanged.
+- TMDB candidate discovery now has an opt-in genre-split phase for broader coverage.
+- Discovery logging now tracks baseline requests, genre-split requests, raw results, duplicates, and final counts.
+- TMDB import diagnostics now track rejection reasons and unique raw TMDB IDs before validation.
+- TMDB vote thresholds are now configurable with environment variables for movies and TV.
+- Output shape and UI remain unchanged.
+- Output remains candidates.tmdb.json-compatible and frontend files were not touched.
+- V0.8 hero simplified.
+- Headline changed to "Find your next pick."
+- Hero subtitle removed.
+- Hero spacing reduced.
+- Background image position intentionally unchanged.
+- Cards, filters, and app behavior unchanged.
+- Background overlay reduced so the image shows more clearly.
+- Hero text changed to dark tones as the first light-theme transition step.
+- Cards and filters intentionally left unchanged.
+- App logic/data/card/filter behavior unchanged.
+- V0.8 now uses local background image asset constellation-bg-v1.png.
+- Previous CSS-only abstract background was replaced/disabled.
+- Dark overlay added for readability.
+- No app logic/data/card/filter behavior changed.
+- Version label updated to CONSTELLATION V0.8.
+- Background calibration pass made abstract amber/orange CSS layers intentionally obvious.
+- Previous subtle background was too invisible.
+- No image assets added.
+- App logic/data/card/filter behavior unchanged.
+- Previous background was too subtle.
+- Background visibility increased with explicit amber/orange CSS layers.
+- CSS-only implementation.
+- No image assets added.
+- App logic/data/card/filter behavior unchanged.
+- Abstract forms intentionally kept faded and low-contrast.
+- Background changed from simple starfield feel to subtle abstract cinematic atmosphere.
+- CSS-only implementation.
+- No image assets added.
+- App logic, data, card, and filter behavior unchanged.
+- Abstract forms intentionally kept faded and low-contrast.
+- Mood tag row now hides when no real mood tags exist.
+- Added Rating filter with All Ratings, 7.0+, 8.0+, and 9.0+.
+- Rating filter combines with existing region, platform, and genre filters.
+- Data files unchanged.
+- Card layout and expansion behavior unchanged.
+- Dynamic card height sync removed.
+- Collapsed cards now use a fixed CSS height.
+- Expanded cards grow only when opened.
+- Dropdown options are styled dark for readability.
+- Data, filtering, and background remain unchanged.
+- v0.7 card expansion cleanup uses local chevron SVG icons.
+- Collapsed card heights remain equal across the row.
+- Card content stays top-aligned with a dedicated bottom control row.
+- Chevron rows align in a consistent position across cards.
+- Data, filters, and background remain unchanged.
+- v0.7 collapse UI refined.
+- Chevrons are centered and aligned.
+- Chevrons no longer use a bordered button look.
+- Collapsed descriptions fade correctly at the bottom.
+- Expanded cards can be collapsed again.
+- Rating formatting remains unchanged.
+- Data files remain unchanged.
+- v0.7 UI cleanup added collapsed descriptions with an arrow expand/collapse toggle.
+- Collapsed long descriptions now fade out subtly.
+- Ratings now display with one decimal place.
+- Candidate JSON remains unchanged.
+- Filtering and data source unchanged.
+- v0.7 switches the frontend to candidates.tmdb.json for TMDB candidate browsing.
+- The app now browses TMDB-suggested candidates, not the manually verified database.
+- The verified database remains untouched.
+- No live TMDB calls are made from the browser.
+- Posters still load from posterUrl in local JSON.
+- Candidate data is unverified and should not be treated as manually verified.
+- v0.6 poster cards now use taller 310px desktop and 270px mobile poster frames.
+- Result context and TMDB attribution are centered to match the centered card layout.
+- v0.6 poster-card refinement keeps 1, 2, and 3 result layouts centered at a consistent card width.
+- Poster frames are taller and use a controlled cinematic cover crop.
+- Selection-map alignment still tracks the rendered card positions.
+- v0.6 reads data/recommendations.enriched.json for the frontend source.
+- Poster images now render from TMDB posterUrl values in the enriched local JSON.
+- The browser still uses local JSON only and makes no live TMDB calls.
+- Filtering logic remains unchanged.
+- The original data/recommendations.json file is untouched.
+- v0.5 accepted as stable for now.
+- Backup checkpoint created at backups/constellation-v0.5-stable/.
+- Future UI or feature work can proceed from this checkpoint.
+- If something breaks, this backup can be used to compare or restore.

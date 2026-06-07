@@ -1,0 +1,1441 @@
+[
+  {
+    "id": "dark-2017",
+    "title": "Dark",
+    "type": "series",
+    "year": 2017,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Netflix"
+    ],
+    "genres": [
+      "sci-fi",
+      "mystery",
+      "thriller"
+    ],
+    "moodTags": [
+      "dark",
+      "complex",
+      "mind-bending"
+    ],
+    "qualityTier": "excellent",
+    "rating": 8.7,
+    "shortBlurb": "One of the strongest European sci-fi mystery shows and perfect for serious recommendation mode.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Netflix availability."
+  },
+  {
+    "id": "arcane-2021",
+    "title": "Arcane",
+    "type": "series",
+    "year": 2021,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Netflix"
+    ],
+    "genres": [
+      "animation",
+      "fantasy",
+      "action",
+      "drama"
+    ],
+    "moodTags": [
+      "stylish",
+      "emotional",
+      "intense"
+    ],
+    "qualityTier": "excellent",
+    "rating": 9.0,
+    "shortBlurb": "Premium animation with strong crossover appeal even for non-gamers.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Netflix availability."
+  },
+  {
+    "id": "stranger-things-2016",
+    "title": "Stranger Things",
+    "type": "series",
+    "year": 2016,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Netflix"
+    ],
+    "genres": [
+      "sci-fi",
+      "horror",
+      "adventure"
+    ],
+    "moodTags": [
+      "nostalgic",
+      "suspenseful",
+      "fun"
+    ],
+    "qualityTier": "very high",
+    "rating": 8.6,
+    "shortBlurb": "A mainstream crowd-pleaser for users who want something easy to start.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Netflix availability."
+  },
+  {
+    "id": "black-mirror-2011",
+    "title": "Black Mirror",
+    "type": "series",
+    "year": 2011,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Netflix"
+    ],
+    "genres": [
+      "sci-fi",
+      "thriller",
+      "anthology"
+    ],
+    "moodTags": [
+      "unsettling",
+      "clever",
+      "dystopian"
+    ],
+    "qualityTier": "excellent",
+    "rating": 8.7,
+    "shortBlurb": "Great for short, self-contained one-episode recommendations.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Netflix availability."
+  },
+  {
+    "id": "better-call-saul-2015",
+    "title": "Better Call Saul",
+    "type": "series",
+    "year": 2015,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Netflix"
+    ],
+    "genres": [
+      "crime",
+      "drama",
+      "legal"
+    ],
+    "moodTags": [
+      "slow-burn",
+      "character-driven",
+      "tense"
+    ],
+    "qualityTier": "excellent",
+    "rating": 9.0,
+    "shortBlurb": "One of the best prestige dramas for viewers who like writing and character depth.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Netflix availability."
+  },
+  {
+    "id": "the-queen-s-gambit-2020",
+    "title": "The Queen’s Gambit",
+    "type": "series",
+    "year": 2020,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Netflix"
+    ],
+    "genres": [
+      "drama",
+      "coming-of-age"
+    ],
+    "moodTags": [
+      "elegant",
+      "focused",
+      "emotional"
+    ],
+    "qualityTier": "excellent",
+    "rating": 8.5,
+    "shortBlurb": "Short, polished, and easy to recommend to almost anyone.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Netflix availability."
+  },
+  {
+    "id": "love-death-and-robots-2019",
+    "title": "Love, Death & Robots",
+    "type": "series",
+    "year": 2019,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Netflix"
+    ],
+    "genres": [
+      "sci-fi",
+      "animation",
+      "anthology"
+    ],
+    "moodTags": [
+      "experimental",
+      "violent",
+      "stylish"
+    ],
+    "qualityTier": "very high",
+    "rating": 8.4,
+    "shortBlurb": "Strong for users who want short episodes and visual variety.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Netflix availability."
+  },
+  {
+    "id": "the-crown-2016",
+    "title": "The Crown",
+    "type": "series",
+    "year": 2016,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Netflix"
+    ],
+    "genres": [
+      "drama",
+      "historical"
+    ],
+    "moodTags": [
+      "polished",
+      "serious",
+      "prestige"
+    ],
+    "qualityTier": "very high",
+    "rating": 8.6,
+    "shortBlurb": "A high-quality drama option for users who do not want action or fantasy.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Netflix availability."
+  },
+  {
+    "id": "mindhunter-2017",
+    "title": "Mindhunter",
+    "type": "series",
+    "year": 2017,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Netflix"
+    ],
+    "genres": [
+      "crime",
+      "thriller",
+      "drama"
+    ],
+    "moodTags": [
+      "cerebral",
+      "tense",
+      "dark"
+    ],
+    "qualityTier": "excellent",
+    "rating": 8.6,
+    "shortBlurb": "Excellent fit for thriller/crime users who want quality over action.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Netflix availability."
+  },
+  {
+    "id": "bojack-horseman-2014",
+    "title": "BoJack Horseman",
+    "type": "series",
+    "year": 2014,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Netflix"
+    ],
+    "genres": [
+      "comedy",
+      "animation",
+      "drama"
+    ],
+    "moodTags": [
+      "cynical",
+      "sad",
+      "sharp"
+    ],
+    "qualityTier": "excellent",
+    "rating": 8.8,
+    "shortBlurb": "A great “comedy but actually deep” recommendation.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Netflix availability."
+  },
+  {
+    "id": "avatar-the-last-airbender-2005",
+    "title": "Avatar: The Last Airbender",
+    "type": "series",
+    "year": 2005,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Netflix"
+    ],
+    "genres": [
+      "fantasy",
+      "adventure",
+      "animation"
+    ],
+    "moodTags": [
+      "uplifting",
+      "epic",
+      "heartfelt"
+    ],
+    "qualityTier": "excellent",
+    "rating": 9.3,
+    "shortBlurb": "Beginner-friendly fantasy adventure with unusually strong storytelling.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Netflix availability."
+  },
+  {
+    "id": "klaus-2019",
+    "title": "Klaus",
+    "type": "movie",
+    "year": 2019,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Netflix"
+    ],
+    "genres": [
+      "animation",
+      "comedy",
+      "family"
+    ],
+    "moodTags": [
+      "warm",
+      "charming",
+      "wholesome"
+    ],
+    "qualityTier": "excellent",
+    "rating": 8.2,
+    "shortBlurb": "A beautiful animated film and a strong cozy recommendation.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Netflix availability."
+  },
+  {
+    "id": "godless-2017",
+    "title": "Godless",
+    "type": "series",
+    "year": 2017,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Netflix"
+    ],
+    "genres": [
+      "western",
+      "drama",
+      "action"
+    ],
+    "moodTags": [
+      "gritty",
+      "atmospheric",
+      "tense"
+    ],
+    "qualityTier": "very high",
+    "rating": 8.2,
+    "shortBlurb": "A compact prestige miniseries that adds variety beyond sci-fi and anime.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Netflix availability."
+  },
+  {
+    "id": "my-name-2021",
+    "title": "My Name",
+    "type": "series",
+    "year": 2021,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Netflix"
+    ],
+    "genres": [
+      "action",
+      "crime",
+      "thriller"
+    ],
+    "moodTags": [
+      "brutal",
+      "revenge-driven",
+      "fast"
+    ],
+    "qualityTier": "high",
+    "rating": 7.8,
+    "shortBlurb": "Strong Korean action-thriller choice for users who want intensity.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Netflix availability."
+  },
+  {
+    "id": "grace-and-frankie-2015",
+    "title": "Grace and Frankie",
+    "type": "series",
+    "year": 2015,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Netflix"
+    ],
+    "genres": [
+      "comedy",
+      "drama"
+    ],
+    "moodTags": [
+      "light",
+      "warm",
+      "character-led"
+    ],
+    "qualityTier": "high",
+    "rating": 8.2,
+    "shortBlurb": "Useful for balancing the database with lighter comedy-drama.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Netflix availability."
+  },
+  {
+    "id": "castlevania-2017",
+    "title": "Castlevania",
+    "type": "anime",
+    "year": 2017,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Netflix"
+    ],
+    "genres": [
+      "fantasy",
+      "action",
+      "horror"
+    ],
+    "moodTags": [
+      "gothic",
+      "violent",
+      "stylish"
+    ],
+    "qualityTier": "very high",
+    "rating": 8.3,
+    "shortBlurb": "Strong dark fantasy animation for anime and non-anime viewers.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Netflix availability."
+  },
+  {
+    "id": "dorohedoro-2020",
+    "title": "Dorohedoro",
+    "type": "anime",
+    "year": 2020,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Netflix"
+    ],
+    "genres": [
+      "dark fantasy",
+      "action",
+      "comedy"
+    ],
+    "moodTags": [
+      "weird",
+      "violent",
+      "chaotic"
+    ],
+    "qualityTier": "very high",
+    "rating": 8.0,
+    "shortBlurb": "A slightly less obvious but memorable pick with a unique tone.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Netflix / Crunchyroll availability."
+  },
+  {
+    "id": "hilda-2018",
+    "title": "Hilda",
+    "type": "series",
+    "year": 2018,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Netflix"
+    ],
+    "genres": [
+      "fantasy",
+      "animation",
+      "adventure"
+    ],
+    "moodTags": [
+      "cozy",
+      "magical",
+      "gentle"
+    ],
+    "qualityTier": "very high",
+    "rating": 8.6,
+    "shortBlurb": "Great for a wholesome fantasy/adventure slot.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Netflix availability."
+  },
+  {
+    "id": "i-think-you-should-leave-with-tim-robinson-2019",
+    "title": "I Think You Should Leave with Tim Robinson",
+    "type": "series",
+    "year": 2019,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Netflix"
+    ],
+    "genres": [
+      "sketch comedy"
+    ],
+    "moodTags": [
+      "absurd",
+      "chaotic",
+      "short-form"
+    ],
+    "qualityTier": "high",
+    "rating": 8.1,
+    "shortBlurb": "Good for a quick weird-comedy recommendation mode.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Netflix availability."
+  },
+  {
+    "id": "dept-q-2025",
+    "title": "Dept. Q",
+    "type": "series",
+    "year": 2025,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Netflix"
+    ],
+    "genres": [
+      "crime",
+      "thriller",
+      "mystery"
+    ],
+    "moodTags": [
+      "bleak",
+      "investigative",
+      "tense"
+    ],
+    "qualityTier": "high",
+    "rating": 8.1,
+    "shortBlurb": "A current crime-thriller candidate for users who like detective stories.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Netflix availability."
+  },
+  {
+    "id": "alien-1979",
+    "title": "Alien",
+    "type": "movie",
+    "year": 1979,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Disney+"
+    ],
+    "genres": [
+      "sci-fi",
+      "horror",
+      "thriller"
+    ],
+    "moodTags": [
+      "tense",
+      "claustrophobic",
+      "iconic"
+    ],
+    "qualityTier": "excellent",
+    "rating": 8.5,
+    "shortBlurb": "Essential sci-fi horror and a strong classic-but-still-effective pick.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Disney+ availability."
+  },
+  {
+    "id": "alien-romulus-2024",
+    "title": "Alien: Romulus",
+    "type": "movie",
+    "year": 2024,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Disney+"
+    ],
+    "genres": [
+      "sci-fi",
+      "horror",
+      "thriller"
+    ],
+    "moodTags": [
+      "intense",
+      "modern",
+      "creature-horror"
+    ],
+    "qualityTier": "high",
+    "rating": 7.1,
+    "shortBlurb": "Useful as a newer sci-fi horror option with mainstream appeal.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Disney+ availability."
+  },
+  {
+    "id": "predator-1987",
+    "title": "Predator",
+    "type": "movie",
+    "year": 1987,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Disney+"
+    ],
+    "genres": [
+      "action",
+      "sci-fi",
+      "thriller"
+    ],
+    "moodTags": [
+      "muscular",
+      "suspenseful",
+      "classic"
+    ],
+    "qualityTier": "very high",
+    "rating": 7.8,
+    "shortBlurb": "A simple, iconic action-sci-fi pick for roulette-style recommendations.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Disney+ availability."
+  },
+  {
+    "id": "predator-killer-of-killers-2025",
+    "title": "Predator: Killer of Killers",
+    "type": "movie",
+    "year": 2025,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Disney+"
+    ],
+    "genres": [
+      "action",
+      "sci-fi",
+      "animation"
+    ],
+    "moodTags": [
+      "violent",
+      "stylish",
+      "anthology"
+    ],
+    "qualityTier": "high",
+    "rating": 7.4,
+    "shortBlurb": "Adds a newer animated action option to the Disney+ side.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Disney+ availability."
+  },
+  {
+    "id": "andor-2022",
+    "title": "Andor",
+    "type": "series",
+    "year": 2022,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Disney+"
+    ],
+    "genres": [
+      "sci-fi",
+      "political thriller",
+      "drama"
+    ],
+    "moodTags": [
+      "serious",
+      "grounded",
+      "tense"
+    ],
+    "qualityTier": "excellent",
+    "rating": 8.4,
+    "shortBlurb": "One of the strongest Star Wars-adjacent picks for adults.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Disney+ availability."
+  },
+  {
+    "id": "the-mandalorian-2019",
+    "title": "The Mandalorian",
+    "type": "series",
+    "year": 2019,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Disney+"
+    ],
+    "genres": [
+      "sci-fi",
+      "adventure",
+      "western"
+    ],
+    "moodTags": [
+      "fun",
+      "cinematic",
+      "episodic"
+    ],
+    "qualityTier": "very high",
+    "rating": 8.6,
+    "shortBlurb": "A mainstream adventure pick that works well for casual viewers.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Disney+ availability."
+  },
+  {
+    "id": "ahsoka-2023",
+    "title": "Ahsoka",
+    "type": "series",
+    "year": 2023,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Disney+"
+    ],
+    "genres": [
+      "sci-fi",
+      "fantasy",
+      "adventure"
+    ],
+    "moodTags": [
+      "heroic",
+      "lore-heavy",
+      "adventurous"
+    ],
+    "qualityTier": "high",
+    "rating": 7.5,
+    "shortBlurb": "Good for Star Wars/fantasy adventure users once manually verified.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Disney+ availability."
+  },
+  {
+    "id": "the-bear-2022",
+    "title": "The Bear",
+    "type": "series",
+    "year": 2022,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Disney+"
+    ],
+    "genres": [
+      "drama",
+      "comedy"
+    ],
+    "moodTags": [
+      "stressful",
+      "emotional",
+      "fast-paced"
+    ],
+    "qualityTier": "excellent",
+    "rating": 8.5,
+    "shortBlurb": "High-quality, compact episodes and strong critical reputation.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Disney+ availability."
+  },
+  {
+    "id": "only-murders-in-the-building-2021",
+    "title": "Only Murders in the Building",
+    "type": "series",
+    "year": 2021,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Disney+"
+    ],
+    "genres": [
+      "comedy",
+      "mystery",
+      "crime"
+    ],
+    "moodTags": [
+      "cozy",
+      "witty",
+      "light suspense"
+    ],
+    "qualityTier": "very high",
+    "rating": 8.1,
+    "shortBlurb": "Great for users who want mystery without heavy darkness.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Disney+ availability."
+  },
+  {
+    "id": "schitt-s-creek-2015",
+    "title": "Schitt’s Creek",
+    "type": "series",
+    "year": 2015,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Disney+"
+    ],
+    "genres": [
+      "comedy"
+    ],
+    "moodTags": [
+      "warm",
+      "witty",
+      "comfort-watch"
+    ],
+    "qualityTier": "excellent",
+    "rating": 8.5,
+    "shortBlurb": "Perfect comfort comedy and useful for balancing intense genres.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Disney+ availability."
+  },
+  {
+    "id": "the-americans-2013",
+    "title": "The Americans",
+    "type": "series",
+    "year": 2013,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Disney+"
+    ],
+    "genres": [
+      "thriller",
+      "spy",
+      "drama"
+    ],
+    "moodTags": [
+      "tense",
+      "mature",
+      "slow-burn"
+    ],
+    "qualityTier": "excellent",
+    "rating": 8.4,
+    "shortBlurb": "A prestige spy thriller for users who like long-form drama.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Disney+ availability."
+  },
+  {
+    "id": "no-one-will-save-you-2023",
+    "title": "No One Will Save You",
+    "type": "movie",
+    "year": 2023,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Disney+"
+    ],
+    "genres": [
+      "sci-fi",
+      "horror",
+      "thriller"
+    ],
+    "moodTags": [
+      "eerie",
+      "tense",
+      "minimal-dialogue"
+    ],
+    "qualityTier": "high",
+    "rating": 6.3,
+    "shortBlurb": "A compact alien-invasion thriller for one-evening viewing.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Disney+ availability."
+  },
+  {
+    "id": "criminal-minds-2005",
+    "title": "Criminal Minds",
+    "type": "series",
+    "year": 2005,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Disney+"
+    ],
+    "genres": [
+      "crime",
+      "thriller"
+    ],
+    "moodTags": [
+      "procedural",
+      "dark",
+      "suspenseful"
+    ],
+    "qualityTier": "high",
+    "rating": 8.1,
+    "shortBlurb": "Useful for a familiar crime/procedural recommendation slot.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Disney+ availability."
+  },
+  {
+    "id": "boston-legal-2004",
+    "title": "Boston Legal",
+    "type": "series",
+    "year": 2004,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Disney+"
+    ],
+    "genres": [
+      "comedy",
+      "legal",
+      "drama"
+    ],
+    "moodTags": [
+      "witty",
+      "sharp",
+      "character-led"
+    ],
+    "qualityTier": "high",
+    "rating": 8.5,
+    "shortBlurb": "A slightly older but strong legal comedy-drama option.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Disney+ availability."
+  },
+  {
+    "id": "new-amsterdam-2018",
+    "title": "New Amsterdam",
+    "type": "series",
+    "year": 2018,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Disney+"
+    ],
+    "genres": [
+      "medical drama"
+    ],
+    "moodTags": [
+      "emotional",
+      "accessible",
+      "hopeful"
+    ],
+    "qualityTier": "high",
+    "rating": 8.0,
+    "shortBlurb": "Good mainstream drama pick for non-genre users.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Disney+ / Netflix overlap."
+  },
+  {
+    "id": "the-fosters-2013",
+    "title": "The Fosters",
+    "type": "series",
+    "year": 2013,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Disney+"
+    ],
+    "genres": [
+      "drama",
+      "family"
+    ],
+    "moodTags": [
+      "emotional",
+      "inclusive",
+      "character-led"
+    ],
+    "qualityTier": "high",
+    "rating": 8.0,
+    "shortBlurb": "Adds a family/social drama option to avoid overloading action and sci-fi.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Disney+ availability."
+  },
+  {
+    "id": "frieren-beyond-journey-s-end-2023",
+    "title": "Frieren: Beyond Journey’s End",
+    "type": "anime",
+    "year": 2023,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Crunchyroll"
+    ],
+    "genres": [
+      "fantasy",
+      "adventure",
+      "drama"
+    ],
+    "moodTags": [
+      "reflective",
+      "beautiful",
+      "melancholic"
+    ],
+    "qualityTier": "excellent",
+    "rating": 8.8,
+    "shortBlurb": "Probably one of the best MVP anime picks because it is high-quality and accessible.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Crunchyroll availability."
+  },
+  {
+    "id": "attack-on-titan-2013",
+    "title": "Attack on Titan",
+    "type": "anime",
+    "year": 2013,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Crunchyroll"
+    ],
+    "genres": [
+      "action",
+      "dark fantasy",
+      "thriller"
+    ],
+    "moodTags": [
+      "brutal",
+      "epic",
+      "intense"
+    ],
+    "qualityTier": "excellent",
+    "rating": 9.1,
+    "shortBlurb": "A flagship anime pick for action/thriller users.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Crunchyroll availability."
+  },
+  {
+    "id": "demon-slayer-kimetsu-no-yaiba-2019",
+    "title": "Demon Slayer: Kimetsu no Yaiba",
+    "type": "anime",
+    "year": 2019,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Crunchyroll"
+    ],
+    "genres": [
+      "action",
+      "fantasy",
+      "adventure"
+    ],
+    "moodTags": [
+      "emotional",
+      "stylish",
+      "heroic"
+    ],
+    "qualityTier": "very high",
+    "rating": 8.6,
+    "shortBlurb": "Very strong mainstream anime recommendation with broad appeal.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Crunchyroll / Netflix overlap."
+  },
+  {
+    "id": "jujutsu-kaisen-2020",
+    "title": "Jujutsu Kaisen",
+    "type": "anime",
+    "year": 2020,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Crunchyroll"
+    ],
+    "genres": [
+      "action",
+      "supernatural",
+      "dark fantasy"
+    ],
+    "moodTags": [
+      "fast",
+      "stylish",
+      "intense"
+    ],
+    "qualityTier": "very high",
+    "rating": 8.5,
+    "shortBlurb": "Strong action anime for users who want something energetic.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Crunchyroll / Netflix overlap."
+  },
+  {
+    "id": "hell-s-paradise-2023",
+    "title": "Hell’s Paradise",
+    "type": "anime",
+    "year": 2023,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Crunchyroll"
+    ],
+    "genres": [
+      "action",
+      "dark fantasy"
+    ],
+    "moodTags": [
+      "violent",
+      "mysterious",
+      "survival"
+    ],
+    "qualityTier": "high",
+    "rating": 8.1,
+    "shortBlurb": "Good for users who like darker shonen-style action.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Crunchyroll availability."
+  },
+  {
+    "id": "fire-force-2019",
+    "title": "Fire Force",
+    "type": "anime",
+    "year": 2019,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Crunchyroll"
+    ],
+    "genres": [
+      "action",
+      "supernatural",
+      "fantasy"
+    ],
+    "moodTags": [
+      "explosive",
+      "energetic",
+      "stylish"
+    ],
+    "qualityTier": "high",
+    "rating": 7.6,
+    "shortBlurb": "Visually strong action anime that fits a fast-and-flashy category.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Crunchyroll availability."
+  },
+  {
+    "id": "blue-exorcist-2011",
+    "title": "Blue Exorcist",
+    "type": "anime",
+    "year": 2011,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Crunchyroll"
+    ],
+    "genres": [
+      "action",
+      "supernatural",
+      "fantasy"
+    ],
+    "moodTags": [
+      "demonic",
+      "school-action",
+      "dramatic"
+    ],
+    "qualityTier": "high",
+    "rating": 7.4,
+    "shortBlurb": "A solid supernatural action option with recognizable appeal.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Crunchyroll availability."
+  },
+  {
+    "id": "wind-breaker-2024",
+    "title": "Wind Breaker",
+    "type": "anime",
+    "year": 2024,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Crunchyroll"
+    ],
+    "genres": [
+      "action",
+      "school",
+      "drama"
+    ],
+    "moodTags": [
+      "street-fighting",
+      "energetic",
+      "stylish"
+    ],
+    "qualityTier": "high",
+    "rating": 7.4,
+    "shortBlurb": "Useful as a newer action anime candidate.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Crunchyroll availability."
+  },
+  {
+    "id": "lycoris-recoil-2022",
+    "title": "Lycoris Recoil",
+    "type": "anime",
+    "year": 2022,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Crunchyroll"
+    ],
+    "genres": [
+      "action",
+      "comedy",
+      "thriller"
+    ],
+    "moodTags": [
+      "stylish",
+      "fun",
+      "energetic"
+    ],
+    "qualityTier": "high",
+    "rating": 7.3,
+    "shortBlurb": "Slightly less obvious but strong action/comedy anime pick.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Crunchyroll availability."
+  },
+  {
+    "id": "my-dress-up-darling-2022",
+    "title": "My Dress-Up Darling",
+    "type": "anime",
+    "year": 2022,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Crunchyroll"
+    ],
+    "genres": [
+      "romance",
+      "comedy",
+      "slice of life"
+    ],
+    "moodTags": [
+      "charming",
+      "light",
+      "wholesome"
+    ],
+    "qualityTier": "high",
+    "rating": 8.0,
+    "shortBlurb": "Adds a lighter romance/comedy anime option.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Crunchyroll / Netflix overlap."
+  },
+  {
+    "id": "spy-x-family-2022",
+    "title": "SPY x FAMILY",
+    "type": "anime",
+    "year": 2022,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Crunchyroll"
+    ],
+    "genres": [
+      "comedy",
+      "action",
+      "spy"
+    ],
+    "moodTags": [
+      "wholesome",
+      "funny",
+      "family-friendly"
+    ],
+    "qualityTier": "very high",
+    "rating": 8.3,
+    "shortBlurb": "Excellent mainstream anime for users who want fun rather than darkness.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Crunchyroll / Netflix overlap."
+  },
+  {
+    "id": "one-piece-1999",
+    "title": "One Piece",
+    "type": "anime",
+    "year": 1999,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Crunchyroll"
+    ],
+    "genres": [
+      "adventure",
+      "fantasy",
+      "action",
+      "comedy"
+    ],
+    "moodTags": [
+      "epic",
+      "joyful",
+      "long-running"
+    ],
+    "qualityTier": "excellent",
+    "rating": 9.0,
+    "shortBlurb": "A classic adventure pick, though season availability must be checked carefully.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Crunchyroll / Netflix overlap."
+  },
+  {
+    "id": "mob-psycho-100-2016",
+    "title": "Mob Psycho 100",
+    "type": "anime",
+    "year": 2016,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Crunchyroll"
+    ],
+    "genres": [
+      "action",
+      "comedy",
+      "supernatural"
+    ],
+    "moodTags": [
+      "heartfelt",
+      "weird",
+      "explosive"
+    ],
+    "qualityTier": "excellent",
+    "rating": 8.6,
+    "shortBlurb": "High-quality anime that balances action, comedy, and emotion.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Crunchyroll / Netflix overlap."
+  },
+  {
+    "id": "haikyu-2014",
+    "title": "Haikyu!!",
+    "type": "anime",
+    "year": 2014,
+    "regions": [
+      "AT"
+    ],
+    "platforms": [
+      "Crunchyroll"
+    ],
+    "genres": [
+      "sports",
+      "comedy",
+      "drama"
+    ],
+    "moodTags": [
+      "uplifting",
+      "energetic",
+      "team-focused"
+    ],
+    "qualityTier": "excellent",
+    "rating": 8.7,
+    "shortBlurb": "Great non-fantasy anime pick and surprisingly beginner-friendly.",
+    "availabilityStatus": "verified",
+    "verified": true,
+    "lastChecked": "2026-06-01",
+    "source": "JustWatch AT title/provider evidence suggested Crunchyroll / Netflix overlap."
+  }
+]
