@@ -1,5 +1,10 @@
 # Constellation Run Log
 
+- Ranked results gallery now shows the full sorted candidate list in 12-card pages.
+- Reveal again recomputes the matching candidate set; Show more only advances through the current sorted list.
+- Astroid markers were removed from the results gallery for the multi-row layout.
+- Result count now reports visible cards out of total matching candidates.
+
 - Result count moved above astroid markers.
 - Astroid markers moved closer to cards.
 - Old line/dots remain removed.

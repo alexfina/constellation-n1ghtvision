@@ -303,6 +303,14 @@ button:hover {
   z-index: 1;
 }
 
+.results-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+  position: relative;
+  z-index: 1;
+}
+
 .results-grid[data-result-count="1"] {
   grid-template-columns: minmax(0, 320px);
 }

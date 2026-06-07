@@ -7,9 +7,9 @@ const genreSelect = document.getElementById("genre-select");
 const ratingSelect = document.getElementById("rating-select");
 const revealButton = document.getElementById("reveal-button");
 const resultsGrid = document.getElementById("results-grid");
+const showMoreButton = document.getElementById("show-more-button");
 const statusEl = document.getElementById("status");
 const resultContextEl = document.getElementById("result-context");
-const selectionMapEl = document.getElementById("selection-map");
 const eyebrowEl = document.querySelector(".eyebrow");
 
 const VERSION_LABEL = "N1GHTVISION V1.0";
@@ -20,8 +20,10 @@ let tmdbAttributionEl = null;
 
 let recommendations = [];
 let revealedOnce = false;
-let activeResultCount = 0;
-let selectionMapFrame = 0;
+let activeResults = [];
+let visibleResultCount = 0;
+const INITIAL_RESULT_COUNT = 12;
+const SHOW_MORE_INCREMENT = 12;
 
 init().catch((error) => {
   console.error(error);
@@ -56,7 +58,7 @@ async function init() {
   setStatus("Choose filters, then reveal matching TMDB candidates.");
   setRevealButtonState(false);
   clearResults();
-  renderSelectionMap(0);
+  setShowMoreState(false, 0, 0);
 
   [regionSelect, platformSelect, typeSelect, genreSelect, ratingSelect].filter(Boolean).forEach((select) => {
     select.addEventListener("change", () => {
@@ -74,9 +76,16 @@ async function init() {
     renderRecommendations();
   });
 
-  window.addEventListener("resize", scheduleSelectionMapSync);
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(scheduleSelectionMapSync).catch(() => {});
+  if (showMoreButton) {
+    showMoreButton.addEventListener("click", () => {
+      if (visibleResultCount >= activeResults.length) {
+        setShowMoreState(false, visibleResultCount, activeResults.length);
+        return;
+      }
+
+      visibleResultCount = Math.min(visibleResultCount + SHOW_MORE_INCREMENT, activeResults.length);
+      renderVisibleResults();
+    });
   }
 }
 
@@ -144,13 +153,14 @@ function renderRecommendations() {
       && hasMinimumRating(item, selectedRating);
   });
 
-  const shuffled = shuffle(matches).slice(0, 3);
+  const sorted = sortCandidates(matches);
 
-  if (shuffled.length === 0) {
-    activeResultCount = 0;
+  if (sorted.length === 0) {
+    activeResults = [];
+    visibleResultCount = 0;
     resultsGrid.dataset.resultCount = "0";
     resultContextEl.textContent = "";
-    renderSelectionMap(0);
+    setShowMoreState(false, 0, 0);
     showEmptyState(
       "No TMDB candidates found for this filter combination.",
       "Try another genre or platform. This candidate pool is still growing, so some combinations simply do not have matches yet."
@@ -159,20 +169,10 @@ function renderRecommendations() {
     return;
   }
 
-  activeResultCount = shuffled.length;
-  resultsGrid.dataset.resultCount = String(shuffled.length);
-  resultsGrid.innerHTML = "";
-  resultContextEl.textContent = "Showing " + shuffled.length + " picks from " + matches.length + " TMDB candidates.";
-
-  renderSelectionMap(activeResultCount);
-
-  shuffled.forEach((item) => {
-    resultsGrid.appendChild(createCard(item));
-  });
-
-  updateDescriptionStates();
+  activeResults = sorted;
+  visibleResultCount = Math.min(INITIAL_RESULT_COUNT, activeResults.length);
+  renderVisibleResults();
   setStatus("Showing TMDB candidates for the current selection.");
-  scheduleSelectionMapSync();
 }
 
 function createCard(item) {
@@ -252,71 +252,40 @@ function renderPills(label, value) {
   return pills + items.map((entry) => '<span class="pill">' + escapeHtml(String(entry)) + "</span>").join("");
 }
 
+function sortCandidates(items) {
+  return items.slice().sort((left, right) => {
+    const leftRating = getSortableRating(left);
+    const rightRating = getSortableRating(right);
+    if (rightRating !== leftRating) {
+      return rightRating - leftRating;
+    }
+
+    const leftTitle = getText(left, ["title", "name"], "").trim().toLowerCase();
+    const rightTitle = getText(right, ["title", "name"], "").trim().toLowerCase();
+    const titleCompare = leftTitle.localeCompare(rightTitle);
+    if (titleCompare !== 0) {
+      return titleCompare;
+    }
+
+    const leftYear = Number(getText(left, ["year", "releaseYear"], 0));
+    const rightYear = Number(getText(right, ["year", "releaseYear"], 0));
+    if (Number.isFinite(rightYear) && Number.isFinite(leftYear) && rightYear !== leftYear) {
+      return rightYear - leftYear;
+    }
+
+    return 0;
+  });
+}
+
+function getSortableRating(item) {
+  const numeric = Number(item && (item.rating ?? item.voteAverage ?? item.score));
+  return Number.isFinite(numeric) ? numeric : -Infinity;
+}
+
 function getMoodTags(item) {
   return asArray(item && (item.moodTags || item.moods || item.tags))
     .map((value) => String(value).trim())
     .filter((value) => value !== "" && value.toLowerCase() !== "none listed");
-}
-
-function renderSelectionMap(count) {
-  if (!selectionMapEl) {
-    return;
-  }
-
-  if (count <= 0) {
-    selectionMapEl.className = "selection-map is-empty";
-    selectionMapEl.innerHTML = "";
-    return;
-  }
-
-  const fragments = [];
-  for (let index = 0; index < count; index += 1) {
-    fragments.push('<span class="selection-astroid" data-node-index="' + index + '" style="opacity:0"></span>');
-  }
-
-  selectionMapEl.className = "selection-map";
-  selectionMapEl.innerHTML = fragments.join("");
-}
-
-function scheduleSelectionMapSync() {
-  if (!selectionMapEl || activeResultCount <= 0) {
-    return;
-  }
-
-  if (selectionMapFrame) {
-    cancelAnimationFrame(selectionMapFrame);
-  }
-
-  selectionMapFrame = window.requestAnimationFrame(syncSelectionMapToCards);
-}
-
-function syncSelectionMapToCards() {
-  selectionMapFrame = 0;
-
-  if (!selectionMapEl || activeResultCount <= 0) {
-    return;
-  }
-
-  const cards = Array.from(resultsGrid.querySelectorAll(".card")).slice(0, activeResultCount);
-  if (cards.length === 0) {
-    return;
-  }
-
-  const mapRect = selectionMapEl.getBoundingClientRect();
-  const positions = cards.map((card) => {
-    const rect = card.getBoundingClientRect();
-    return rect.left + rect.width / 2 - mapRect.left;
-  });
-
-  const astroids = Array.from(selectionMapEl.querySelectorAll(".selection-astroid"));
-
-  positions.forEach((x, index) => {
-    const astroid = astroids[index];
-    if (astroid) {
-      astroid.style.left = x + "px";
-      astroid.style.opacity = "1";
-    }
-  });
 }
 
 function showEmptyState(title, message) {
@@ -329,12 +298,13 @@ function showEmptyState(title, message) {
 }
 
 function clearResults() {
-  activeResultCount = 0;
+  activeResults = [];
+  visibleResultCount = 0;
   resultsGrid.dataset.resultCount = "0";
   resultsGrid.innerHTML = "";
   resultContextEl.textContent = "";
   setStatus("");
-  renderSelectionMap(0);
+  setShowMoreState(false, 0, 0);
 }
 
 function setStatus(message) {
@@ -343,6 +313,31 @@ function setStatus(message) {
 
 function setRevealButtonState(hasResults) {
   revealButton.textContent = hasResults ? "Reveal again" : "Reveal recommendations";
+}
+
+function renderVisibleResults() {
+  const visibleItems = activeResults.slice(0, visibleResultCount);
+  resultsGrid.dataset.resultCount = String(visibleItems.length);
+  resultsGrid.innerHTML = "";
+  resultContextEl.textContent =
+    "Showing " + visibleItems.length + " of " + activeResults.length + " matching candidates.";
+
+  visibleItems.forEach((item) => {
+    resultsGrid.appendChild(createCard(item));
+  });
+
+  updateDescriptionStates();
+  setShowMoreState(visibleResultCount < activeResults.length, visibleResultCount, activeResults.length);
+}
+
+function setShowMoreState(isVisible) {
+  if (!showMoreButton) {
+    return;
+  }
+
+  showMoreButton.hidden = !isVisible;
+  showMoreButton.disabled = !isVisible;
+  showMoreButton.textContent = "Show more";
 }
 
 function hasMatch(item, pluralKey, singularKey, selectedValue) {
