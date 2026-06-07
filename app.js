@@ -12,7 +12,7 @@ const resultContextEl = document.getElementById("result-context");
 const selectionMapEl = document.getElementById("selection-map");
 const eyebrowEl = document.querySelector(".eyebrow");
 
-const VERSION_LABEL = "CONSTELLATION V0.8";
+const VERSION_LABEL = "N1GHTVISION V1.0";
 const TMDB_ATTRIBUTION =
   "This product uses the TMDB API but is not endorsed or certified by TMDB.";
 
