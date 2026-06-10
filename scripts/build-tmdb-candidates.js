@@ -11,17 +11,69 @@ const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 const TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 const TMDB_API_DISCOVER_PAGE_LIMIT = 500;
 
+const TARGET_REGIONS = ["AT", "US"];
+
 const APPROVED_PROVIDERS = [
   "Netflix",
   "Prime Video",
   "Disney+",
+  "Apple TV+",
   "Paramount+",
-  "Crunchyroll"
+  "Crunchyroll",
+  "Max",
+  "Hulu",
+  "Peacock"
 ];
 
 const CACHE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
-const TARGET_REGION = "AT";
 const MIN_RATING = 7.0;
+const VISIBLE_GENRE_ORDER = [
+  "Action",
+  "Adventure",
+  "Comedy",
+  "Crime",
+  "Drama",
+  "Family",
+  "Fantasy",
+  "History",
+  "Horror",
+  "Music",
+  "Mystery",
+  "Romance",
+  "Sci-Fi",
+  "Thriller",
+  "War",
+  "Western"
+];
+const DISCOVERY_RAW_GENRE_ORDER = [
+  "Action",
+  "Action & Adventure",
+  "Adventure",
+  "Animation",
+  "Comedy",
+  "Crime",
+  "Documentary",
+  "Drama",
+  "Family",
+  "Fantasy",
+  "History",
+  "Horror",
+  "Kids",
+  "Music",
+  "Mystery",
+  "Romance",
+  "Science Fiction",
+  "Sci-Fi & Fantasy",
+  "Thriller",
+  "War",
+  "War & Politics",
+  "Western",
+  "News",
+  "Reality",
+  "Soap",
+  "Talk",
+  "TV Movie"
+];
 
 function parsePositiveInteger(value) {
   const parsed = Number.parseInt(String(value || ""), 10);
@@ -49,27 +101,6 @@ const MAX_CANDIDATES = resolveMaxCandidates();
 const MIN_MOVIE_VOTES = resolveMinVotes("TMDB_MOVIE_MIN_VOTES", 300);
 const MIN_TV_VOTES = resolveMinVotes("TMDB_TV_MIN_VOTES", 100);
 const GENRE_SPLIT_ENABLED = String(process.env.TMDB_ENABLE_GENRE_SPLIT || "") === "1";
-const SUPPORTED_GENRE_ORDER = [
-  "action",
-  "action & adventure",
-  "adventure",
-  "animation",
-  "comedy",
-  "crime",
-  "drama",
-  "family",
-  "fantasy",
-  "history",
-  "horror",
-  "kids",
-  "music",
-  "mystery",
-  "romance",
-  "sci-fi & fantasy",
-  "science fiction",
-  "thriller",
-  "war"
-];
 
 function normalizeText(value) {
   return String(value || "")
@@ -77,6 +108,19 @@ function normalizeText(value) {
     .normalize("NFKD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-z0-9]+/g, "");
+}
+
+function addUnique(list, value) {
+  if (value === null || value === undefined || String(value).trim() === "") {
+    return list;
+  }
+
+  const text = String(value);
+  if (list.indexOf(text) === -1) {
+    list.push(text);
+  }
+
+  return list;
 }
 
 function todayIsoDate() {
@@ -108,26 +152,26 @@ function noteRejection(stats, reason) {
   stats.rejectionStats[reason] += 1;
 }
 
-function extractCandidateGenres(result, genreLookup) {
+function extractRawGenres(result, genreLookup) {
   if (!Array.isArray(result.genre_ids)) {
     return [];
   }
 
   const seen = new Set();
-  const genres = [];
+  const rawGenres = [];
 
   result.genre_ids.forEach((id) => {
     const rawGenre = genreLookup.get(id);
-    const canonicalGenre = canonicalGenreName(rawGenre);
-    if (!canonicalGenre || seen.has(canonicalGenre)) {
+    const key = normalizeText(rawGenre);
+    if (!rawGenre || seen.has(key)) {
       return;
     }
 
-    seen.add(canonicalGenre);
-    genres.push(canonicalGenre);
+    seen.add(key);
+    rawGenres.push(String(rawGenre));
   });
 
-  return genres;
+  return rawGenres;
 }
 
 function hasJapaneseOrigin(result) {
@@ -156,9 +200,8 @@ function hasJapaneseOrigin(result) {
   return false;
 }
 
-function isAnimeCandidate(result, genreLookup) {
-  const genres = extractCandidateGenres(result, genreLookup);
-  return genres.indexOf("animation") !== -1 && hasJapaneseOrigin(result);
+function isAnimeCandidate(result, rawGenres) {
+  return rawGenres.some((genre) => normalizeText(genre) === "animation") && hasJapaneseOrigin(result);
 }
 
 function canonicalProviderName(rawName) {
@@ -168,36 +211,131 @@ function canonicalProviderName(rawName) {
   if (normalized.includes("primevideo") || normalized.includes("amazonprime")) return "Prime Video";
   if (normalized.includes("disneyplus") || normalized === "disney") return "Disney+";
   if (normalized.includes("paramountplus") || normalized.includes("paramount")) return "Paramount+";
+  if (normalized.includes("appletv")) return "Apple TV+";
+  if (normalized.includes("hbomax") || normalized === "max") return "Max";
+  if (normalized.includes("hulu")) return "Hulu";
+  if (normalized.includes("peacock")) return "Peacock";
   if (normalized.includes("crunchyroll")) return "Crunchyroll";
 
   return null;
 }
 
-function canonicalGenreName(rawName) {
-  const normalized = normalizeText(rawName);
+function normalizeCandidateGenres(rawGenres) {
+  const normalized = [];
 
-  if (normalized === "action") return "action";
-  if (normalized === "actionadventure") return "action & adventure";
-  if (normalized === "adventure") return "adventure";
-  if (normalized === "anime") return "anime";
-  if (normalized === "animation") return "animation";
-  if (normalized === "comedy") return "comedy";
-  if (normalized === "crime") return "crime";
-  if (normalized === "drama") return "drama";
-  if (normalized === "family") return "family";
-  if (normalized === "fantasy") return "fantasy";
-  if (normalized === "history") return "history";
-  if (normalized === "horror") return "horror";
-  if (normalized === "kids") return "kids";
-  if (normalized === "music") return "music";
-  if (normalized === "mystery") return "mystery";
-  if (normalized === "romance") return "romance";
-  if (normalized === "scififantasy") return "sci-fi & fantasy";
-  if (normalized === "sciencefiction") return "science fiction";
-  if (normalized === "thriller") return "thriller";
-  if (normalized === "war") return "war";
+  function pushGenre(value) {
+    addUnique(normalized, value);
+  }
 
-  return null;
+  rawGenres.forEach((genre) => {
+    const key = normalizeText(genre);
+
+    if (key === "action") {
+      pushGenre("Action");
+      return;
+    }
+
+    if (key === "actionadventure") {
+      pushGenre("Action");
+      pushGenre("Adventure");
+      return;
+    }
+
+    if (key === "adventure") {
+      pushGenre("Adventure");
+      return;
+    }
+
+    if (key === "comedy") {
+      pushGenre("Comedy");
+      return;
+    }
+
+    if (key === "crime") {
+      pushGenre("Crime");
+      return;
+    }
+
+    if (key === "drama") {
+      pushGenre("Drama");
+      return;
+    }
+
+    if (key === "family" || key === "kids") {
+      pushGenre("Family");
+      return;
+    }
+
+    if (key === "fantasy") {
+      pushGenre("Fantasy");
+      return;
+    }
+
+    if (key === "history") {
+      pushGenre("History");
+      return;
+    }
+
+    if (key === "horror") {
+      pushGenre("Horror");
+      return;
+    }
+
+    if (key === "music") {
+      pushGenre("Music");
+      return;
+    }
+
+    if (key === "mystery") {
+      pushGenre("Mystery");
+      return;
+    }
+
+    if (key === "romance") {
+      pushGenre("Romance");
+      return;
+    }
+
+    if (key === "sciencefiction") {
+      pushGenre("Sci-Fi");
+      return;
+    }
+
+    if (key === "scififantasy") {
+      pushGenre("Sci-Fi");
+      pushGenre("Fantasy");
+      return;
+    }
+
+    if (key === "thriller") {
+      pushGenre("Thriller");
+      return;
+    }
+
+    if (key === "war" || key === "warpolitics") {
+      pushGenre("War");
+      return;
+    }
+
+    if (key === "western") {
+      pushGenre("Western");
+    }
+  });
+
+  return normalized;
+}
+
+function deriveFormatStyle(rawGenres, result) {
+  const hasDocumentary = rawGenres.some((genre) => normalizeText(genre) === "documentary");
+  if (hasDocumentary) {
+    return "Documentary";
+  }
+
+  if (isAnimeCandidate(result, rawGenres)) {
+    return "Anime";
+  }
+
+  return "Live Action";
 }
 
 function buildUrl(endpoint, params) {
@@ -274,14 +412,14 @@ async function isFreshEnough(filePath, maxAgeMs) {
   }
 }
 
-async function resolveApprovedProviders(mediaType) {
+async function resolveApprovedProviders(mediaType, watchRegion) {
   const endpoint = mediaType === "movie" ? "/watch/providers/movie" : "/watch/providers/tv";
   let payload;
 
   try {
-    payload = await fetchJson(endpoint, { watch_region: TARGET_REGION });
+    payload = await fetchJson(endpoint, { watch_region: watchRegion });
   } catch (error) {
-    console.warn("[warn] failed to load " + mediaType + " provider list: " + error.message);
+    console.warn("[warn] failed to load " + mediaType + " provider list for " + watchRegion + ": " + error.message);
     return [];
   }
 
@@ -316,7 +454,7 @@ async function loadGenreLookup(mediaType) {
     const lookup = new Map();
     (payload.genres || []).forEach((genre) => {
       if (genre && genre.id && genre.name) {
-        lookup.set(genre.id, String(genre.name).toLowerCase());
+        lookup.set(genre.id, String(genre.name));
       }
     });
     return lookup;
@@ -330,18 +468,18 @@ function buildGenreDiscoveryFilters(genreLookup) {
   const filters = [];
   const seen = new Set();
 
-  for (const desiredGenre of SUPPORTED_GENRE_ORDER) {
+  for (const desiredRawName of DISCOVERY_RAW_GENRE_ORDER) {
+    const desiredKey = normalizeText(desiredRawName);
     for (const [id, rawName] of genreLookup.entries()) {
-      const canonicalGenre = canonicalGenreName(rawName);
-      if (canonicalGenre !== desiredGenre || canonicalGenre === "anime" || seen.has(canonicalGenre)) {
+      if (normalizeText(rawName) !== desiredKey || seen.has(id)) {
         continue;
       }
 
       filters.push({
         id: id,
-        name: canonicalGenre
+        name: String(rawName)
       });
-      seen.add(canonicalGenre);
+      seen.add(id);
       break;
     }
   }
@@ -405,16 +543,14 @@ function isValidCandidate(result, mediaType, voteThreshold, stats) {
   return true;
 }
 
-function createCandidateRecord(result, mediaType, platformName, genreLookup, lastChecked) {
+function createCandidateRecord(result, mediaType, platformName, rawGenres, lastChecked, region) {
   const config = mediaTypeConfig(mediaType);
   const isMovie = mediaType === "movie";
   const title = isMovie ? result.title : result.name;
   const year = isMovie ? extractYear(result.release_date) : extractYear(result.first_air_date);
   const overview = String(result.overview || "").trim();
-  const genres = extractCandidateGenres(result, genreLookup);
-  if (isAnimeCandidate(result, genreLookup) && genres.indexOf("anime") === -1) {
-    genres.unshift("anime");
-  }
+  const formatStyle = deriveFormatStyle(rawGenres, result);
+  const genres = normalizeCandidateGenres(rawGenres);
   const posterPath = String(result.poster_path || "");
   const posterUrl = posterPath ? TMDB_IMAGE_BASE_URL + posterPath : "";
 
@@ -423,9 +559,12 @@ function createCandidateRecord(result, mediaType, platformName, genreLookup, las
     title: String(title || "").trim(),
     type: config.type,
     year: year,
-    regions: [TARGET_REGION],
+    regions: [region],
     platforms: [platformName],
+    availability: [{ region: region, platform: platformName }],
+    rawGenres: rawGenres.slice(),
     genres: genres,
+    formatStyle: formatStyle,
     moodTags: [],
     qualityTier: "tmdb-candidate",
     rating: Number(result.vote_average),
@@ -443,10 +582,42 @@ function createCandidateRecord(result, mediaType, platformName, genreLookup, las
   };
 }
 
-function mergePlatforms(existing, platformName) {
-  if (existing.platforms.indexOf(platformName) === -1) {
-    existing.platforms.push(platformName);
+function addAvailabilityPair(existing, region, platformName) {
+  if (!existing.availability) {
+    existing.availability = [];
   }
+
+  const pairExists = existing.availability.some((entry) => entry.region === region && entry.platform === platformName);
+  if (!pairExists) {
+    existing.availability.push({ region: region, platform: platformName });
+  }
+}
+
+function availabilitySortValue(values, orderedValues, fallbackValue) {
+  const index = orderedValues.indexOf(values);
+  return index === -1 ? fallbackValue : index;
+}
+
+function sortAvailabilityPairs(availability) {
+  return availability.slice().sort((left, right) => {
+    const leftRegionIndex = availabilitySortValue(left.region, TARGET_REGIONS, TARGET_REGIONS.length);
+    const rightRegionIndex = availabilitySortValue(right.region, TARGET_REGIONS, TARGET_REGIONS.length);
+    if (leftRegionIndex !== rightRegionIndex) {
+      return leftRegionIndex - rightRegionIndex;
+    }
+
+    if (left.region !== right.region) {
+      return String(left.region || "").localeCompare(String(right.region || ""));
+    }
+
+    const leftPlatformIndex = availabilitySortValue(left.platform, APPROVED_PROVIDERS, APPROVED_PROVIDERS.length);
+    const rightPlatformIndex = availabilitySortValue(right.platform, APPROVED_PROVIDERS, APPROVED_PROVIDERS.length);
+    if (leftPlatformIndex !== rightPlatformIndex) {
+      return leftPlatformIndex - rightPlatformIndex;
+    }
+
+    return String(left.platform || "").localeCompare(String(right.platform || ""));
+  });
 }
 
 function finalizeCandidates(map) {
@@ -460,6 +631,28 @@ function finalizeCandidates(map) {
     return a.tmdbId - b.tmdbId;
   });
 
+  list.forEach((candidate) => {
+    const availability = Array.isArray(candidate.availability) ? candidate.availability : [];
+    candidate.availability = sortAvailabilityPairs(
+      availability.filter(
+        (entry) =>
+          entry &&
+          TARGET_REGIONS.indexOf(entry.region) !== -1 &&
+          APPROVED_PROVIDERS.indexOf(entry.platform) !== -1
+      )
+    );
+    candidate.regions = TARGET_REGIONS.filter((region) =>
+      candidate.availability.some((entry) => entry.region === region)
+    );
+    candidate.platforms = APPROVED_PROVIDERS.filter((name) =>
+      candidate.availability.some((entry) => entry.platform === name)
+    );
+    candidate.rawGenres = Array.isArray(candidate.rawGenres)
+      ? candidate.rawGenres.filter((value) => value !== null && value !== undefined && String(value).trim() !== "")
+      : [];
+    candidate.genres = VISIBLE_GENRE_ORDER.filter((name) => candidate.genres.indexOf(name) !== -1);
+  });
+
   return list;
 }
 
@@ -470,7 +663,8 @@ async function discoverCandidatesForMediaType(
   lastChecked,
   candidateMap,
   stats,
-  genreFilter
+  genreFilter,
+  watchRegion
 ) {
   const minVoteCount = mediaType === "movie" ? MIN_MOVIE_VOTES : MIN_TV_VOTES;
   const endpoint = mediaType === "movie" ? "/discover/movie" : "/discover/tv";
@@ -486,8 +680,8 @@ async function discoverCandidatesForMediaType(
       try {
         const params = {
           include_adult: "false",
-          watch_region: TARGET_REGION,
-          with_watch_region: TARGET_REGION,
+          watch_region: watchRegion,
+          with_watch_region: watchRegion,
           with_watch_monetization_types: "flatrate",
           with_watch_providers: provider.id,
           "vote_average.gte": MIN_RATING,
@@ -549,18 +743,19 @@ async function discoverCandidatesForMediaType(
         }
 
         const key = mediaType + ":" + result.id;
+        const rawGenres = extractRawGenres(result, genreLookup);
         const candidate = candidateMap.get(key);
 
         if (!candidate) {
           candidateMap.set(
             key,
-            createCandidateRecord(result, mediaType, provider.name, genreLookup, lastChecked)
+            createCandidateRecord(result, mediaType, provider.name, rawGenres, lastChecked, watchRegion)
           );
         } else {
           if (stats) {
             stats.duplicateCandidatesSkipped += 1;
           }
-          mergePlatforms(candidate, provider.name);
+          addAvailabilityPair(candidate, watchRegion, provider.name);
         }
       }
 
@@ -606,55 +801,64 @@ async function main() {
     }
   };
 
-  const movieProviders = await resolveApprovedProviders("movie");
-  const tvProviders = await resolveApprovedProviders("tv");
+  const regionProviderPairs = [];
   const movieGenres = await loadGenreLookup("movie");
   const tvGenres = await loadGenreLookup("tv");
   const movieGenreFilters = buildGenreDiscoveryFilters(movieGenres);
   const tvGenreFilters = buildGenreDiscoveryFilters(tvGenres);
 
-  await discoverCandidatesForMediaType(
-    "movie",
-    movieProviders,
-    movieGenres,
-    lastChecked,
-    candidateMap,
-    discoveryStats,
-    null
-  );
-  await discoverCandidatesForMediaType(
-    "tv",
-    tvProviders,
-    tvGenres,
-    lastChecked,
-    candidateMap,
-    discoveryStats,
-    null
-  );
+  for (const region of TARGET_REGIONS) {
+    const movieProviders = await resolveApprovedProviders("movie", region);
+    const tvProviders = await resolveApprovedProviders("tv", region);
+    regionProviderPairs.push({ region, movieProviders, tvProviders });
 
-  if (GENRE_SPLIT_ENABLED) {
-    for (const genreFilter of movieGenreFilters) {
-      await discoverCandidatesForMediaType(
-        "movie",
-        movieProviders,
-        movieGenres,
-        lastChecked,
-        candidateMap,
-        discoveryStats,
-        genreFilter
-      );
-    }
+    await discoverCandidatesForMediaType(
+      "movie",
+      movieProviders,
+      movieGenres,
+      lastChecked,
+      candidateMap,
+      discoveryStats,
+      null,
+      region
+    );
+    await discoverCandidatesForMediaType(
+      "tv",
+      tvProviders,
+      tvGenres,
+      lastChecked,
+      candidateMap,
+      discoveryStats,
+      null,
+      region
+    );
 
-    for (const genreFilter of tvGenreFilters) {
-      await discoverCandidatesForMediaType(
-        "tv",
-        tvProviders,
-        tvGenres,
-        lastChecked,
-        candidateMap,
-        discoveryStats,
-        genreFilter
-      );
+    if (GENRE_SPLIT_ENABLED) {
+      for (const genreFilter of movieGenreFilters) {
+        await discoverCandidatesForMediaType(
+          "movie",
+          movieProviders,
+          movieGenres,
+          lastChecked,
+          candidateMap,
+          discoveryStats,
+          genreFilter,
+          region
+        );
+      }
+
+      for (const genreFilter of tvGenreFilters) {
+        await discoverCandidatesForMediaType(
+          "tv",
+          tvProviders,
+          tvGenres,
+          lastChecked,
+          candidateMap,
+          discoveryStats,
+          genreFilter,
+          region
+        );
+      }
     }
   }
 
@@ -662,16 +866,42 @@ async function main() {
   const uniqueCandidatesWritten = candidateMap.size;
   const finalCandidateCount = candidates.length;
 
-  candidates.forEach((candidate) => {
-    candidate.platforms = APPROVED_PROVIDERS.filter((name) => candidate.platforms.indexOf(name) !== -1);
-  });
-
   await fs.writeFile(OUTPUT_FILE, JSON.stringify(candidates, null, 2) + "\n", "utf8");
+
+  const regionCounts = countBy(candidates, (candidate) => candidate.regions);
+  const platformCounts = countBy(candidates, (candidate) => candidate.platforms);
+  const typeCounts = countBy(candidates, (candidate) => [candidate.type]);
+  const formatStyleCounts = countBy(candidates, (candidate) => [candidate.formatStyle]);
+  const genreCounts = countBy(candidates, (candidate) => candidate.genres);
+  const emptyGenreCount = candidates.filter((candidate) => !Array.isArray(candidate.genres) || candidate.genres.length === 0).length;
+  const animeExamples = candidates.filter((candidate) => candidate.formatStyle === "Anime").slice(0, 5);
+  const documentaryExamples = candidates.filter((candidate) => candidate.formatStyle === "Documentary").slice(0, 5);
+  const westernExamples = candidates.filter((candidate) => Array.isArray(candidate.genres) && candidate.genres.indexOf("Western") !== -1).slice(0, 5);
+  const missingVisibleGenres = VISIBLE_GENRE_ORDER.filter((genre) => !genreCounts[genre]);
 
   console.log("TMDB candidate build complete");
   console.log("output file: " + OUTPUT_FILE);
-  console.log("baseline discovery requests: " + discoveryStats.baselineDiscoveryRequests);
-  console.log("genre-split discovery requests: " + discoveryStats.genreSplitDiscoveryRequests);
+  console.log("total candidates: " + finalCandidateCount);
+  console.log("movie count: " + typeCounts.movie);
+  console.log("series count: " + typeCounts.series);
+  console.log("count by region: " + JSON.stringify(regionCounts));
+  console.log("count by platform: " + JSON.stringify(platformCounts));
+  console.log("count by type: " + JSON.stringify(typeCounts));
+  console.log("count by formatStyle: " + JSON.stringify(formatStyleCounts));
+  console.log("count by normalized genre: " + JSON.stringify(genreCounts));
+  console.log("empty genre count: " + emptyGenreCount);
+  console.log("anime examples: " + JSON.stringify(animeExamples.slice(0, 3).map((candidate) => candidate.title)));
+  console.log("documentary examples: " + JSON.stringify(documentaryExamples.slice(0, 3).map((candidate) => candidate.title)));
+  console.log("western examples: " + JSON.stringify(westernExamples.slice(0, 3).map((candidate) => candidate.title)));
+  if (missingVisibleGenres.length > 0) {
+    console.warn("warning: visible genres with zero candidates: " + missingVisibleGenres.join(", "));
+  }
+  if (!regionCounts.US) {
+    console.warn("warning: United States currently has zero candidates");
+  }
+  if (!regionCounts.AT) {
+    console.warn("warning: Austria currently has zero candidates");
+  }
   console.log("raw results seen: " + discoveryStats.rawResultsSeen);
   console.log("unique raw TMDB IDs seen: " + discoveryStats.uniqueRawTmdbIdsSeen);
   console.log("duplicates skipped: " + discoveryStats.duplicateCandidatesSkipped);
@@ -683,7 +913,10 @@ async function main() {
   console.log("rejections.invalidTypeOrMedia: " + discoveryStats.rejectionStats.invalidTypeOrMedia);
   console.log("unique candidates written: " + uniqueCandidatesWritten);
   console.log("final candidate count: " + finalCandidateCount);
-  console.log("provider coverage: movie=" + movieProviders.length + ", tv=" + tvProviders.length);
+  console.log(
+    "provider coverage: " +
+      regionProviderPairs.map((entry) => entry.region + "(movie=" + entry.movieProviders.length + ", tv=" + entry.tvProviders.length + ")").join(", ")
+  );
   console.log("movie min votes used: " + MIN_MOVIE_VOTES);
   console.log("tv min votes used: " + MIN_TV_VOTES);
   console.log(
@@ -695,6 +928,21 @@ async function main() {
   console.log("candidate cap: " + (MAX_CANDIDATES ? MAX_CANDIDATES : "none"));
   console.log("genre split enabled: " + (GENRE_SPLIT_ENABLED ? "yes" : "no"));
   console.log("staleness window: 7 days");
+}
+
+function countBy(items, selector) {
+  const counts = {};
+  items.forEach((item) => {
+    const values = Array.isArray(selector(item)) ? selector(item) : [];
+    values.forEach((value) => {
+      const key = String(value);
+      if (!key) {
+        return;
+      }
+      counts[key] = (counts[key] || 0) + 1;
+    });
+  });
+  return counts;
 }
 
 main().catch((error) => {

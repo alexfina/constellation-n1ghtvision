@@ -3,6 +3,7 @@ const DATA_URL = "data/candidates.tmdb.json";
 const regionSelect = document.getElementById("region-select");
 const platformSelect = document.getElementById("platform-select");
 const typeSelect = document.getElementById("type-select");
+const formatSelect = document.getElementById("format-select");
 const genreSelect = document.getElementById("genre-select");
 const ratingSelect = document.getElementById("rating-select");
 const revealButton = document.getElementById("reveal-button");
@@ -15,6 +16,10 @@ const eyebrowEl = document.querySelector(".eyebrow");
 const VERSION_LABEL = "N1GHTVISION V1.0";
 const TMDB_ATTRIBUTION =
   "This product uses the TMDB API but is not endorsed or certified by TMDB.";
+const REGION_LABELS = {
+  AT: "Austria",
+  US: "United States"
+};
 
 let tmdbAttributionEl = null;
 
@@ -43,7 +48,7 @@ async function init() {
   const data = await loadRecommendations();
   recommendations = Array.isArray(data) ? data : data.recommendations ?? [];
 
-  populateSelect(regionSelect, collectValues(recommendations, ["regions", "region"]));
+  populateRegionSelect(regionSelect, collectValues(recommendations, ["regions", "region"]));
   populateSelect(platformSelect, collectValues(recommendations, ["platforms", "platform"]));
   populateSelect(genreSelect, collectValues(recommendations, ["genres", "genre"]));
   if (ratingSelect) {
@@ -60,7 +65,7 @@ async function init() {
   clearResults();
   setShowMoreState(false, 0, 0);
 
-  [regionSelect, platformSelect, typeSelect, genreSelect, ratingSelect].filter(Boolean).forEach((select) => {
+  [regionSelect, platformSelect, typeSelect, formatSelect, genreSelect, ratingSelect].filter(Boolean).forEach((select) => {
     select.addEventListener("change", () => {
       if (revealedOnce) {
         renderRecommendations();
@@ -118,6 +123,26 @@ function populateSelect(select, values) {
   });
 }
 
+function populateRegionSelect(select, values) {
+  const options = ["", ...values].filter(Boolean);
+  select.innerHTML = "";
+
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = "All Regions";
+  select.appendChild(defaultOption);
+
+  options.forEach((value) => {
+    if (!value) {
+      return;
+    }
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = REGION_LABELS[value] || value;
+    select.appendChild(option);
+  });
+}
+
 function collectValues(items, keys) {
   const values = new Set();
 
@@ -134,6 +159,7 @@ function renderRecommendations() {
   const selectedRegion = regionSelect.value;
   const selectedPlatform = platformSelect.value;
   const selectedType = typeSelect ? typeSelect.value : "";
+  const selectedFormat = formatSelect ? formatSelect.value : "";
   const selectedGenre = genreSelect.value;
   const selectedRating = ratingSelect ? Number(ratingSelect.value) : 0;
 
@@ -146,9 +172,9 @@ function renderRecommendations() {
       return false;
     }
 
-    return hasMatch(item, "regions", "region", selectedRegion)
-      && hasMatch(item, "platforms", "platform", selectedPlatform)
+    return hasAvailabilityMatch(item, selectedRegion, selectedPlatform)
       && hasMatch(item, "type", "type", selectedType)
+      && hasMatch(item, "formatStyle", "formatStyle", selectedFormat)
       && hasMatch(item, "genres", "genre", selectedGenre)
       && hasMinimumRating(item, selectedRating);
   });
@@ -347,6 +373,23 @@ function hasMatch(item, pluralKey, singularKey, selectedValue) {
 
   const values = asArray(item[pluralKey] || item[singularKey]).map((value) => String(value));
   return values.indexOf(selectedValue) !== -1;
+}
+
+function hasAvailabilityMatch(item, selectedRegion, selectedPlatform) {
+  if (!selectedRegion && !selectedPlatform) {
+    return true;
+  }
+
+  const availability = Array.isArray(item && item.availability) ? item.availability : [];
+  return availability.some((entry) => {
+    if (!entry) {
+      return false;
+    }
+
+    const regionMatches = !selectedRegion || entry.region === selectedRegion;
+    const platformMatches = !selectedPlatform || entry.platform === selectedPlatform;
+    return regionMatches && platformMatches;
+  });
 }
 
 function hasMinimumRating(item, threshold) {
