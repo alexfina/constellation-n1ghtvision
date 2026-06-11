@@ -1,4 +1,4 @@
-const DATA_URL = "data/candidates.tmdb.json";
+const DATA_URL = "data/candidates.with-imdb.json";
 
 const regionSelect = document.getElementById("region-select");
 const platformSelect = document.getElementById("platform-select");
@@ -215,6 +215,9 @@ function createCard(item) {
   const blurb = getText(item, ["shortBlurb", "tmdbOverview", "blurb", "summary", "description"], "");
   const posterUrl = getText(item, ["posterUrl"], "");
   const ratingValue = formatRating(item.rating ?? item.voteAverage ?? item.vote_count ?? rating);
+  const imdbId = getText(item, ["imdbId"], "");
+  const imdbRating = Number(item && item.imdbRating);
+  const ratingBadge = renderRatingBadge(imdbId, imdbRating, ratingValue);
 
   const hasBlurb = blurb.trim() !== "";
   const blurbText = hasBlurb
@@ -245,11 +248,15 @@ function createCard(item) {
     "<span>|</span>" +
     "<span>Platform: " + escapeHtml(platform || "Unknown platform") + "</span>" +
     "</div>" +
-    '<div class="pill-row">' +
-    renderPills("Rating", ratingValue) +
-    renderPills("Genres", genres) +
-    (moodTags.length > 0 ? renderPills("Mood tags", moodTags) : "") +
+    '<div class="pill-row pill-row-rating">' +
+    ratingBadge +
     "</div>" +
+    '<div class="pill-row pill-row-genres">' +
+    renderGenrePill(genres) +
+    "</div>" +
+    (moodTags.length > 0
+      ? '<div class="pill-row pill-row-moods">' + renderPills("Mood tags", moodTags) + "</div>"
+      : "") +
     '<div class="card-blurb-wrap" data-state="collapsed" data-has-toggle="false">' +
     '<div class="card-blurb-text">' +
     '<p id="' + escapeHtml(blurbId) + '" class="' + blurbClass + '">' + escapeHtml(blurbText) + "</p>" +
@@ -276,6 +283,27 @@ function renderPills(label, value) {
 
   const pills = '<span class="pill pill-label">' + escapeHtml(label + ":") + "</span>";
   return pills + items.map((entry) => '<span class="pill">' + escapeHtml(String(entry)) + "</span>").join("");
+}
+
+function renderGenrePill(value) {
+  const items = asArray(value).slice(0, 6);
+  const text = items.length === 0 ? "Genres: none listed" : "Genres: " + items.join(", ");
+  return '<span class="pill pill-genre">' + escapeHtml(text) + "</span>";
+}
+
+function renderRatingBadge(imdbId, imdbRating, tmdbRatingValue) {
+  if (imdbId && Number.isFinite(imdbRating)) {
+    const imdbText = "IMDb " + formatRating(imdbRating) + " " + String.fromCharCode(8599);
+    return (
+      '<a class="pill rating-pill rating-pill-link" href="https://www.imdb.com/title/' +
+      escapeHtml(imdbId) +
+      '/" target="_blank" rel="noopener noreferrer">' +
+      escapeHtml(imdbText) +
+      "</a>"
+    );
+  }
+
+  return '<span class="pill rating-pill">' + escapeHtml("TMDB " + tmdbRatingValue) + "</span>";
 }
 
 function sortCandidates(items) {

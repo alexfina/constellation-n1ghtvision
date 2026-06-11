@@ -446,6 +446,38 @@ button:hover {
   color: #334155;
 }
 
+.rating-pill {
+  font-weight: 600;
+  color: #111827;
+}
+
+.rating-pill-link {
+  color: #111827;
+  text-decoration: none;
+}
+
+.rating-pill-link:hover,
+.rating-pill-link:focus-visible {
+  text-decoration: none;
+}
+
+.pill-row-rating {
+  margin-bottom: 10px;
+}
+
+.pill-row-genres,
+.pill-row-moods {
+  margin-bottom: 12px;
+}
+
+.pill-genre {
+  display: inline-block;
+  max-width: 100%;
+  white-space: normal;
+  line-height: 1.35;
+  vertical-align: top;
+}
+
 .blurb {
   margin: 0;
   color: #334155;
@@ -562,6 +594,18 @@ button:hover {
   text-align: center;
   position: relative;
   z-index: 1;
+}
+
+.site-footer {
+  padding: 0 20px 24px;
+  text-align: center;
+  color: rgba(49, 65, 92, 0.82);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.site-footer p {
+  margin: 0;
 }
 
 .empty-state {
