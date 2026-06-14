@@ -1,5 +1,25 @@
 # Constellation Run Log
 
+- Platform display revised to show the full wrapping platform list in the main metadata row.
+- Removed the "+N more" compact behavior and the expanded-only Available on section.
+- HBO Max display mapping remains intact, including legacy Max normalization.
+- No data files changed.
+- No push or deploy performed.
+
+- Platform overflow refinement clarified.
+- Root cause: the expanded card state was putting the full platform list back into the main metadata row.
+- Fix: keep the main platform row compact in all states and show the full list only in an expanded details section.
+- HBO Max display mapping remains intact, including legacy Max normalization.
+- No data files changed.
+- No push or deploy performed.
+
+- Platform display overflow fixed on cards.
+- Collapsed cards now show at most the first two platforms plus a "+N more" indicator.
+- Expanded cards show the full platform list again.
+- HBO Max display mapping remains intact, including legacy Max normalization.
+- Platform filtering unchanged; no data files changed.
+- No push or deploy performed.
+
 - Series IMDb genre enrichment added in the IMDb pipeline.
 - Root cause for missing Series visible genres was weak TMDB TV genre coverage for History, Horror, Music, Romance, and Thriller.
 - Fix: enrich-imdb-candidates.js now merges approved IMDb genres into series candidate.genres and records them in imdbAddedGenres.

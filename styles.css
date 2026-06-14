@@ -413,6 +413,15 @@ button:hover {
   white-space: nowrap;
 }
 
+.meta .card-platform-line {
+  display: block;
+  flex: 1 1 100%;
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.35;
+}
+
 .pill-row {
   display: flex;
   flex-wrap: wrap;

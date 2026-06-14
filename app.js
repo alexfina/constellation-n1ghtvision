@@ -213,7 +213,8 @@ function createCard(item) {
   const title = getText(item, ["title", "name"], "Untitled recommendation");
   const year = getText(item, ["year", "releaseYear"], "Unknown year");
   const type = getText(item, ["type", "mediaType"], "Unknown type");
-  const platform = joinValues(item, ["platforms", "platform"], canonicalPlatformName);
+  const platformValues = getPlatformValues(item);
+  const platformDisplay = formatPlatformDisplay(platformValues);
   const genres = joinValues(item, ["genres", "genre"]);
   const moodTags = getMoodTags(item);
   const blurb = getText(item, ["shortBlurb", "tmdbOverview", "blurb", "summary", "description"], "");
@@ -250,7 +251,11 @@ function createCard(item) {
     "<span>|</span>" +
     "<span>Type: " + escapeHtml(type) + "</span>" +
     "<span>|</span>" +
-    "<span>Platform: " + escapeHtml(platform || "Unknown platform") + "</span>" +
+    '<span class="card-platform-line" data-platforms="' +
+    escapeHtml(JSON.stringify(platformValues)) +
+    '">' +
+    escapeHtml(platformDisplay) +
+    "</span>" +
     "</div>" +
     '<div class="pill-row pill-row-rating">' +
     ratingBadge +
@@ -582,6 +587,37 @@ function updateDescriptionStates() {
       button.setAttribute("aria-label", isExpanded ? "Expand description" : "Collapse description");
     };
   });
+}
+
+function getPlatformValues(item) {
+  const values = [];
+  const seen = new Set();
+
+  asArray(item && (item.platforms || item.platform)).forEach((value) => {
+    const label = canonicalPlatformName(value);
+    if (!label) {
+      return;
+    }
+
+    const key = normalizeText(label);
+    if (seen.has(key)) {
+      return;
+    }
+
+    seen.add(key);
+    values.push(label);
+  });
+
+  return values;
+}
+
+function formatPlatformDisplay(platforms, isExpanded) {
+  const values = Array.isArray(platforms) ? platforms.filter((value) => String(value || "").trim() !== "") : [];
+  if (values.length === 0) {
+    return "Platform: Unknown platform";
+  }
+
+  return "Platform: " + values.join(", ");
 }
 
 function ensureTmdbAttribution() {
