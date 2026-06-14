@@ -1,5 +1,17 @@
 # Constellation Run Log
 
+- Centered result-count display restored above the cards.
+- Count now updates for both normal and shuffled result modes.
+- No data files changed.
+- No push or deploy performed.
+
+- Results controls updated.
+- Main button now uses Show results / Update results instead of Reveal again.
+- Shuffle results button added for the current filtered set only.
+- Status text now uses concise match counts.
+- No data files changed.
+- No push or deploy performed.
+
 - Platform display revised to show the full wrapping platform list in the main metadata row.
 - Removed the "+N more" compact behavior and the expanded-only Available on section.
 - HBO Max display mapping remains intact, including legacy Max normalization.

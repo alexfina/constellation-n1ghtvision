@@ -7,6 +7,7 @@ const formatSelect = document.getElementById("format-select");
 const genreSelect = document.getElementById("genre-select");
 const ratingSelect = document.getElementById("rating-select");
 const revealButton = document.getElementById("reveal-button");
+const shuffleButton = document.getElementById("shuffle-button");
 const resultsGrid = document.getElementById("results-grid");
 const showMoreButton = document.getElementById("show-more-button");
 const statusEl = document.getElementById("status");
@@ -25,6 +26,7 @@ let tmdbAttributionEl = null;
 
 let recommendations = [];
 let revealedOnce = false;
+let currentResultMode = "sorted";
 let activeResults = [];
 let visibleResultCount = 0;
 const INITIAL_RESULT_COUNT = 12;
@@ -61,14 +63,15 @@ async function init() {
   }
 
   setStatus("Choose filters, then reveal matching TMDB candidates.");
-  setRevealButtonState(false);
+  setMainButtonState(false);
+  setShuffleButtonState(false);
   clearResults();
   setShowMoreState(false, 0, 0);
 
   [regionSelect, platformSelect, typeSelect, formatSelect, genreSelect, ratingSelect].filter(Boolean).forEach((select) => {
     select.addEventListener("change", () => {
       if (revealedOnce) {
-        renderRecommendations();
+        renderRecommendations("sorted");
       } else {
         clearResults();
       }
@@ -77,9 +80,18 @@ async function init() {
 
   revealButton.addEventListener("click", () => {
     revealedOnce = true;
-    setRevealButtonState(true);
-    renderRecommendations();
+    renderRecommendations("sorted");
   });
+
+  if (shuffleButton) {
+    shuffleButton.addEventListener("click", () => {
+      if (!revealedOnce || activeResults.length === 0) {
+        return;
+      }
+
+      renderRecommendations("shuffle");
+    });
+  }
 
   if (showMoreButton) {
     showMoreButton.addEventListener("click", () => {
@@ -160,7 +172,7 @@ function collectValues(items, keys, transform) {
   return Array.from(values).sort((a, b) => a.localeCompare(b));
 }
 
-function renderRecommendations() {
+function renderRecommendations(mode = "sorted") {
   const selectedRegion = regionSelect.value;
   const selectedPlatform = platformSelect.value;
   const selectedType = typeSelect ? typeSelect.value : "";
@@ -184,9 +196,13 @@ function renderRecommendations() {
       && hasMinimumRating(item, selectedRating);
   });
 
-  const sorted = sortCandidates(matches);
+  currentResultMode = mode === "shuffle" ? "shuffle" : "sorted";
+  const ordered = currentResultMode === "shuffle" ? shuffle(matches) : sortCandidates(matches);
 
-  if (sorted.length === 0) {
+  setMainButtonState(true);
+  setShuffleButtonState(revealedOnce && ordered.length > 0);
+
+  if (ordered.length === 0) {
     activeResults = [];
     visibleResultCount = 0;
     resultsGrid.dataset.resultCount = "0";
@@ -200,10 +216,14 @@ function renderRecommendations() {
     return;
   }
 
-  activeResults = sorted;
+  activeResults = ordered;
   visibleResultCount = Math.min(INITIAL_RESULT_COUNT, activeResults.length);
   renderVisibleResults();
-  setStatus("Showing TMDB candidates for the current selection.");
+  setStatus(
+    currentResultMode === "shuffle"
+      ? "Showing " + activeResults.length + " shuffled matches"
+      : "Showing " + activeResults.length + " matches"
+  );
 }
 
 function createCard(item) {
@@ -374,16 +394,29 @@ function setStatus(message) {
   statusEl.textContent = message;
 }
 
-function setRevealButtonState(hasResults) {
-  revealButton.textContent = hasResults ? "Reveal again" : "Reveal recommendations";
+function setMainButtonState(hasResults) {
+  revealButton.textContent = hasResults ? "Update results" : "Show results";
+}
+
+function setShuffleButtonState(isVisible) {
+  if (!shuffleButton) {
+    return;
+  }
+
+  shuffleButton.hidden = !isVisible;
+  shuffleButton.disabled = !isVisible;
+}
+
+function formatResultContextText(visibleCount, totalCount, mode) {
+  const suffix = mode === "shuffle" ? "shuffled candidates" : "matching candidates";
+  return "Showing " + visibleCount + " of " + totalCount + " " + suffix + ".";
 }
 
 function renderVisibleResults() {
   const visibleItems = activeResults.slice(0, visibleResultCount);
   resultsGrid.dataset.resultCount = String(visibleItems.length);
   resultsGrid.innerHTML = "";
-  resultContextEl.textContent =
-    "Showing " + visibleItems.length + " of " + activeResults.length + " matching candidates.";
+  resultContextEl.textContent = formatResultContextText(visibleItems.length, activeResults.length, currentResultMode);
 
   visibleItems.forEach((item) => {
     resultsGrid.appendChild(createCard(item));
