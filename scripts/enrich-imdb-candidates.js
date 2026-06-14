@@ -18,6 +18,7 @@ const IMDB_RATINGS_FILE = path.join(DATA_DIR, "imdb", "title.ratings.tsv.gz");
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 const TMDB_CONCURRENCY = 5;
 const TMDB_MAX_RETRIES = 5;
+const SERIES_VISIBLE_GENRE_ORDER = ["History", "Horror", "Music", "Romance", "Thriller"];
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -266,13 +267,29 @@ function buildEnrichedCandidate(candidate, imdbRecord) {
   const imdbRating = imdbRecord && imdbRecord.rating !== undefined ? imdbRecord.rating : null;
   const imdbVotes = imdbRecord && imdbRecord.votes !== undefined ? imdbRecord.votes : null;
   const imdbGenres = imdbRecord && Array.isArray(imdbRecord.genres) ? imdbRecord.genres : [];
+  const genres = Array.isArray(candidate.genres) ? candidate.genres.slice() : [];
+  const imdbAddedGenres = [];
+
+  if (candidate.type === "series" && imdbGenres.length > 0) {
+    SERIES_VISIBLE_GENRE_ORDER.forEach((genre) => {
+      if (
+        imdbGenres.some((imdbGenre) => normalizeText(imdbGenre) === normalizeText(genre)) &&
+        !genres.some((existingGenre) => normalizeText(existingGenre) === normalizeText(genre))
+      ) {
+        genres.push(genre);
+        imdbAddedGenres.push(genre);
+      }
+    });
+  }
 
   return {
     ...candidate,
+    genres: genres,
     imdbId: imdbId,
     imdbRating: imdbRating,
     imdbVotes: imdbVotes,
     imdbGenres: imdbGenres,
+    imdbAddedGenres: imdbAddedGenres,
     imdbUrl: buildImdbUrl(imdbId)
   };
 }
@@ -416,7 +433,14 @@ async function main() {
     candidatesWithImdbGenres: 0,
     missingImdbId: 0,
     missingImdbRating: 0,
-    seriesThrillerGenreMismatch: 0
+    seriesThrillerGenreMismatch: 0,
+    seriesImdbGenreAdds: {
+      History: 0,
+      Horror: 0,
+      Music: 0,
+      Romance: 0,
+      Thriller: 0
+    }
   };
 
   const successfulMatches = [];
@@ -471,6 +495,14 @@ async function main() {
     ) {
       totals.seriesThrillerGenreMismatch += 1;
     }
+
+    if (candidate.type === "series" && Array.isArray(candidate.imdbAddedGenres)) {
+      candidate.imdbAddedGenres.forEach((genre) => {
+        if (Object.prototype.hasOwnProperty.call(totals.seriesImdbGenreAdds, genre)) {
+          totals.seriesImdbGenreAdds[genre] += 1;
+        }
+      });
+    }
   });
 
   console.log("IMDb enrichment complete");
@@ -484,6 +516,7 @@ async function main() {
   console.log("missing imdbId count: " + totals.missingImdbId);
   console.log("missing imdbRating count: " + totals.missingImdbRating);
   console.log("series with imdbGenres Thriller but normalized genres missing Thriller: " + totals.seriesThrillerGenreMismatch);
+  console.log("series imdb genre adds by visible genre: " + JSON.stringify(totals.seriesImdbGenreAdds));
   console.log("TMDB external_id cache hits: " + fetchStats.cacheHits);
   console.log("TMDB external_id cache misses: " + fetchStats.cacheMisses);
   console.log("existing imdbId reused: " + fetchStats.reusedExistingImdbId);

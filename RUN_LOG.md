@@ -1,5 +1,13 @@
 # Constellation Run Log
 
+- Series IMDb genre enrichment added in the IMDb pipeline.
+- Root cause for missing Series visible genres was weak TMDB TV genre coverage for History, Horror, Music, Romance, and Thriller.
+- Fix: enrich-imdb-candidates.js now merges approved IMDb genres into series candidate.genres and records them in imdbAddedGenres.
+- Approved Series genre gains: History 98, Horror 97, Music 37, Romance 246, Thriller 133.
+- Risky IMDb genres were not merged: Biography, Reality-TV, Talk-Show, News, Game-Show, Short, Sport.
+- candidates.with-imdb.json was regenerated; candidates.tmdb.json was not changed.
+- No push or deploy performed.
+
 - Frontend loading bug found after the HBO Max cleanup.
 - Root cause: app.js called normalizeText() from canonicalPlatformName() before defining the helper, which threw during platform dropdown population and stopped init().
 - Fix: added the missing normalizeText() helper to the frontend so platform canonicalization works without breaking dropdown loading.
