@@ -20,7 +20,7 @@ const APPROVED_PROVIDERS = [
   "Apple TV+",
   "Paramount+",
   "Crunchyroll",
-  "Max",
+  "HBO Max",
   "Hulu",
   "Peacock"
 ];
@@ -212,7 +212,7 @@ function canonicalProviderName(rawName) {
   if (normalized.includes("disneyplus") || normalized === "disney") return "Disney+";
   if (normalized.includes("paramountplus") || normalized.includes("paramount")) return "Paramount+";
   if (normalized.includes("appletv")) return "Apple TV+";
-  if (normalized.includes("hbomax") || normalized === "max") return "Max";
+  if (normalized.includes("hbomax") || normalized === "max") return "HBO Max";
   if (normalized.includes("hulu")) return "Hulu";
   if (normalized.includes("peacock")) return "Peacock";
   if (normalized.includes("crunchyroll")) return "Crunchyroll";

@@ -1,5 +1,20 @@
 # Constellation Run Log
 
+- Frontend loading bug found after the HBO Max cleanup.
+- Root cause: app.js called normalizeText() from canonicalPlatformName() before defining the helper, which threw during platform dropdown population and stopped init().
+- Fix: added the missing normalizeText() helper to the frontend so platform canonicalization works without breaking dropdown loading.
+- Max/HBO Max display and filtering remain aligned.
+- No data regeneration, push, or deploy performed.
+
+- IMDb enrichment script added.
+- IMDb fields added through candidates.with-imdb.json.
+- IMDb/TMDB rating pill display added.
+- Effective rating logic added: IMDb rating when available, TMDB fallback when IMDb is missing.
+- Sorting and rating filtering now use effective visible rating.
+- Rating dropdown audit/fix completed.
+- Platform label cleanup: Max now displays as HBO Max.
+- No push or deploy performed.
+
 - Ranked results gallery now shows the full sorted candidate list in 12-card pages.
 - Reveal again recomputes the matching candidate set; Show more only advances through the current sorted list.
 - Astroid markers were removed from the results gallery for the multi-row layout.

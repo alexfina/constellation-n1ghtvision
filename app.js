@@ -49,7 +49,7 @@ async function init() {
   recommendations = Array.isArray(data) ? data : data.recommendations ?? [];
 
   populateRegionSelect(regionSelect, collectValues(recommendations, ["regions", "region"]));
-  populateSelect(platformSelect, collectValues(recommendations, ["platforms", "platform"]));
+  populateSelect(platformSelect, collectValues(recommendations, ["platforms", "platform"], canonicalPlatformName));
   populateSelect(genreSelect, collectValues(recommendations, ["genres", "genre"]));
   if (ratingSelect) {
     ratingSelect.innerHTML = [
@@ -143,12 +143,17 @@ function populateRegionSelect(select, values) {
   });
 }
 
-function collectValues(items, keys) {
+function collectValues(items, keys, transform) {
   const values = new Set();
 
   items.forEach((item) => {
     keys.forEach((key) => {
-      asArray(item && item[key]).forEach((value) => values.add(String(value)));
+      asArray(item && item[key]).forEach((value) => {
+        const normalizedValue = typeof transform === "function" ? transform(value) : String(value);
+        if (normalizedValue !== null && normalizedValue !== undefined && String(normalizedValue).trim() !== "") {
+          values.add(String(normalizedValue));
+        }
+      });
     });
   });
 
@@ -208,13 +213,12 @@ function createCard(item) {
   const title = getText(item, ["title", "name"], "Untitled recommendation");
   const year = getText(item, ["year", "releaseYear"], "Unknown year");
   const type = getText(item, ["type", "mediaType"], "Unknown type");
-  const platform = joinValues(item, ["platforms", "platform"]);
+  const platform = joinValues(item, ["platforms", "platform"], canonicalPlatformName);
   const genres = joinValues(item, ["genres", "genre"]);
-  const rating = getText(item, ["rating", "score"], "No rating");
   const moodTags = getMoodTags(item);
   const blurb = getText(item, ["shortBlurb", "tmdbOverview", "blurb", "summary", "description"], "");
   const posterUrl = getText(item, ["posterUrl"], "");
-  const ratingValue = formatRating(item.rating ?? item.voteAverage ?? item.vote_count ?? rating);
+  const ratingValue = formatRating(getEffectiveRating(item));
   const imdbId = getText(item, ["imdbId"], "");
   const imdbRating = Number(item && item.imdbRating);
   const ratingBadge = renderRatingBadge(imdbId, imdbRating, ratingValue);
@@ -332,7 +336,7 @@ function sortCandidates(items) {
 }
 
 function getSortableRating(item) {
-  const numeric = Number(item && (item.rating ?? item.voteAverage ?? item.score));
+  const numeric = getEffectiveRating(item);
   return Number.isFinite(numeric) ? numeric : -Infinity;
 }
 
@@ -415,7 +419,7 @@ function hasAvailabilityMatch(item, selectedRegion, selectedPlatform) {
     }
 
     const regionMatches = !selectedRegion || entry.region === selectedRegion;
-    const platformMatches = !selectedPlatform || entry.platform === selectedPlatform;
+    const platformMatches = !selectedPlatform || canonicalPlatformName(entry.platform) === selectedPlatform;
     return regionMatches && platformMatches;
   });
 }
@@ -425,15 +429,65 @@ function hasMinimumRating(item, threshold) {
     return true;
   }
 
-  const numeric = Number(item && (item.rating ?? item.voteAverage ?? item.score));
+  const numeric = getEffectiveRating(item);
   return Number.isFinite(numeric) && numeric >= threshold;
 }
 
-function joinValues(item, keys) {
+function getEffectiveRating(item) {
+  const imdbRating = Number(item && item.imdbRating);
+  if (Number.isFinite(imdbRating)) {
+    return imdbRating;
+  }
+
+  const tmdbRating = Number(item && (item.rating ?? item.voteAverage ?? item.score));
+  return Number.isFinite(tmdbRating) ? tmdbRating : NaN;
+}
+
+function normalizeText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]+/g, "");
+}
+
+function canonicalPlatformName(rawName) {
+  const value = String(rawName || "").trim();
+  if (!value) {
+    return "";
+  }
+
+  const normalized = normalizeText(value);
+  if (normalized.includes("hbomax") || normalized === "max") {
+    return "HBO Max";
+  }
+
+  return value;
+}
+
+function joinValues(item, keys, transform) {
   for (let index = 0; index < keys.length; index += 1) {
     const values = asArray(item[keys[index]]);
     if (values.length > 0) {
-      return values.join(", ");
+      const seen = new Set();
+      const normalizedValues = [];
+
+      values.forEach((value) => {
+        const normalizedValue = typeof transform === "function" ? transform(value) : String(value);
+        if (normalizedValue === null || normalizedValue === undefined || String(normalizedValue).trim() === "") {
+          return;
+        }
+
+        const textValue = String(normalizedValue);
+        if (seen.has(textValue)) {
+          return;
+        }
+
+        seen.add(textValue);
+        normalizedValues.push(textValue);
+      });
+
+      return normalizedValues.join(", ");
     }
   }
 
