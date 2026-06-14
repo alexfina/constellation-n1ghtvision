@@ -173,11 +173,28 @@ button:focus {
 }
 
 .actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 14px 16px;
+  margin-top: 18px;
+}
+
+.actions-left,
+.actions-right {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   gap: 14px;
-  margin-top: 18px;
+  min-width: 0;
+}
+
+.actions-left {
+  justify-self: start;
+  flex-wrap: wrap;
+}
+
+.actions-right {
+  justify-self: end;
 }
 
 button {
@@ -200,9 +217,11 @@ button:hover {
 
 .status {
   margin: 0;
-  flex: 1 1 220px;
   min-height: 1.4em;
   color: #31415c;
+  text-align: center;
+  justify-self: center;
+  max-width: 100%;
 }
 
 .results {
@@ -380,6 +399,11 @@ button:hover {
   margin-bottom: 10px;
 }
 
+.card-title-row h2 {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 .card-marker {
   width: 8px;
   height: 8px;
@@ -421,6 +445,84 @@ button:hover {
   white-space: normal;
   overflow-wrap: anywhere;
   line-height: 1.35;
+}
+
+.card-save-button,
+#saved-only-button {
+  padding: 8px 12px;
+  font-size: 0.76rem;
+  line-height: 1;
+  border-radius: 999px;
+  box-shadow:
+    0 8px 18px rgba(48, 79, 163, 0.16),
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+}
+
+.card-save-button {
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgba(231, 236, 243, 0.84), rgba(212, 220, 231, 0.72));
+  color: #334155;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  box-shadow:
+    0 8px 16px rgba(15, 23, 42, 0.08),
+    0 1px 0 rgba(255, 255, 255, 0.34) inset;
+  backdrop-filter: blur(10px) saturate(128%);
+  -webkit-backdrop-filter: blur(10px) saturate(128%);
+}
+
+.card-save-button[aria-pressed="true"] {
+  background:
+    linear-gradient(180deg, rgba(223, 236, 255, 0.92), rgba(197, 216, 250, 0.84));
+  color: #ffffff;
+  border-color: rgba(143, 180, 255, 0.38);
+}
+
+.card-save-button:hover,
+.card-save-button:focus-visible,
+#saved-only-button:hover,
+#saved-only-button:focus-visible {
+  transform: translateY(-1px);
+}
+
+.card-save-button:hover,
+.card-save-button:focus-visible {
+  background:
+    linear-gradient(180deg, rgba(219, 226, 235, 0.88), rgba(201, 211, 224, 0.8));
+  border-color: rgba(143, 180, 255, 0.34);
+}
+
+.card-save-button[aria-pressed="true"]:hover,
+.card-save-button[aria-pressed="true"]:focus-visible {
+  background:
+    linear-gradient(180deg, rgba(214, 230, 255, 0.96), rgba(187, 209, 249, 0.9));
+  border-color: rgba(143, 180, 255, 0.48);
+}
+
+#saved-only-button {
+  padding: 13px 18px;
+  font-size: 0.92rem;
+  line-height: 1.1;
+  font-weight: 700;
+  background:
+    linear-gradient(180deg, rgba(16, 20, 30, 0.98), rgba(7, 10, 16, 0.96));
+  color: #eef3fb;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+#saved-only-button.is-active,
+#saved-only-button[aria-pressed="true"] {
+  background:
+    linear-gradient(180deg, rgba(25, 32, 47, 0.98), rgba(10, 13, 19, 0.98));
+  color: #ffffff;
+  border-color: rgba(143, 180, 255, 0.32);
 }
 
 .pill-row {
@@ -652,6 +754,25 @@ button:hover {
   .shell {
     width: min(100% - 20px, 1100px);
     padding-top: 24px;
+  }
+
+  .actions {
+    grid-template-columns: 1fr;
+    justify-items: stretch;
+  }
+
+  .actions-left,
+  .actions-right,
+  .status {
+    justify-self: stretch;
+  }
+
+  .status {
+    order: 2;
+  }
+
+  .actions-right {
+    order: 3;
   }
 
   .results {

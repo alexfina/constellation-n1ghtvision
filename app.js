@@ -8,6 +8,7 @@ const genreSelect = document.getElementById("genre-select");
 const ratingSelect = document.getElementById("rating-select");
 const revealButton = document.getElementById("reveal-button");
 const shuffleButton = document.getElementById("shuffle-button");
+const savedOnlyButton = document.getElementById("saved-only-button");
 const resultsGrid = document.getElementById("results-grid");
 const showMoreButton = document.getElementById("show-more-button");
 const statusEl = document.getElementById("status");
@@ -21,12 +22,15 @@ const REGION_LABELS = {
   AT: "Austria",
   US: "United States"
 };
+const SAVED_TITLES_STORAGE_KEY = "n1ghtvision.savedTitles.v1";
 
 let tmdbAttributionEl = null;
 
 let recommendations = [];
 let revealedOnce = false;
 let currentResultMode = "sorted";
+let savedOnlyActive = false;
+let savedTitleIds = loadSavedTitleIds();
 let activeResults = [];
 let visibleResultCount = 0;
 const INITIAL_RESULT_COUNT = 12;
@@ -65,6 +69,7 @@ async function init() {
   setStatus("Choose filters, then reveal matching TMDB candidates.");
   setMainButtonState(false);
   setShuffleButtonState(false);
+  setSavedOnlyButtonState(savedOnlyActive);
   clearResults();
   setShowMoreState(false, 0, 0);
 
@@ -92,6 +97,33 @@ async function init() {
       renderRecommendations("shuffle");
     });
   }
+
+  if (savedOnlyButton) {
+    savedOnlyButton.addEventListener("click", () => {
+      savedOnlyActive = !savedOnlyActive;
+      setSavedOnlyButtonState(savedOnlyActive);
+
+      if (revealedOnce) {
+        renderRecommendations(savedOnlyActive ? currentResultMode : "sorted");
+      } else {
+        clearResults();
+      }
+    });
+  }
+
+  resultsGrid.addEventListener("click", (event) => {
+    const button = event.target && typeof event.target.closest === "function" ? event.target.closest(".card-save-button") : null;
+    if (!button) {
+      return;
+    }
+
+    const candidateId = String(button.getAttribute("data-candidate-id") || "");
+    if (!candidateId) {
+      return;
+    }
+
+    toggleSavedTitle(candidateId);
+  });
 
   if (showMoreButton) {
     showMoreButton.addEventListener("click", () => {
@@ -172,7 +204,7 @@ function collectValues(items, keys, transform) {
   return Array.from(values).sort((a, b) => a.localeCompare(b));
 }
 
-function renderRecommendations(mode = "sorted") {
+function renderRecommendations(mode = "sorted", options = {}) {
   const selectedRegion = regionSelect.value;
   const selectedPlatform = platformSelect.value;
   const selectedType = typeSelect ? typeSelect.value : "";
@@ -196,8 +228,9 @@ function renderRecommendations(mode = "sorted") {
       && hasMinimumRating(item, selectedRating);
   });
 
+  const filteredMatches = savedOnlyActive ? matches.filter((item) => isSavedCandidate(item)) : matches;
   currentResultMode = mode === "shuffle" ? "shuffle" : "sorted";
-  const ordered = currentResultMode === "shuffle" ? shuffle(matches) : sortCandidates(matches);
+  const ordered = currentResultMode === "shuffle" ? shuffle(filteredMatches) : sortCandidates(filteredMatches);
 
   setMainButtonState(true);
   setShuffleButtonState(revealedOnce && ordered.length > 0);
@@ -209,15 +242,22 @@ function renderRecommendations(mode = "sorted") {
     resultContextEl.textContent = "";
     setShowMoreState(false, 0, 0);
     showEmptyState(
-      "No TMDB candidates found for this filter combination.",
-      "Try another genre or platform. This candidate pool is still growing, so some combinations simply do not have matches yet."
+      savedOnlyActive ? "No saved titles match the current filters." : "No TMDB candidates found for this filter combination.",
+      savedOnlyActive
+        ? "Try saving a few titles first or turn off Saved only to browse the full filtered set."
+        : "Try another genre or platform. This candidate pool is still growing, so some combinations simply do not have matches yet."
     );
-    setStatus("No matching TMDB candidates for the current selection.");
+    setStatus(savedOnlyActive ? "No saved titles match the current selection." : "No matching TMDB candidates for the current selection.");
     return;
   }
 
   activeResults = ordered;
-  visibleResultCount = Math.min(INITIAL_RESULT_COUNT, activeResults.length);
+  if (options.preserveVisibleCount) {
+    const preservedCount = visibleResultCount > 0 ? visibleResultCount : INITIAL_RESULT_COUNT;
+    visibleResultCount = Math.min(preservedCount, activeResults.length);
+  } else {
+    visibleResultCount = Math.min(INITIAL_RESULT_COUNT, activeResults.length);
+  }
   renderVisibleResults();
   setStatus(
     currentResultMode === "shuffle"
@@ -233,6 +273,7 @@ function createCard(item) {
   const title = getText(item, ["title", "name"], "Untitled recommendation");
   const year = getText(item, ["year", "releaseYear"], "Unknown year");
   const type = getText(item, ["type", "mediaType"], "Unknown type");
+  const candidateId = getCandidateSaveId(item);
   const platformValues = getPlatformValues(item);
   const platformDisplay = formatPlatformDisplay(platformValues);
   const genres = joinValues(item, ["genres", "genre"]);
@@ -251,6 +292,18 @@ function createCard(item) {
 
   const blurbClass = hasBlurb ? "blurb" : "blurb is-fallback";
   const blurbId = "card-blurb-" + String(item.tmdbId || item.id || title).replace(/[^a-zA-Z0-9_-]+/g, "-");
+  const isSaved = candidateId ? savedTitleIds.has(candidateId) : false;
+  const saveButtonMarkup = candidateId
+    ? '<button class="card-save-button mini-toggle" type="button" data-candidate-id="' +
+      escapeHtml(candidateId) +
+      '" aria-pressed="' +
+      (isSaved ? "true" : "false") +
+      '" aria-label="' +
+      escapeHtml(isSaved ? "Remove from saved items" : "Save title") +
+      '">' +
+      escapeHtml(isSaved ? "Saved" : "Save") +
+      "</button>"
+    : "";
   const posterMarkup = posterUrl
     ? '<div class="card-poster"><img src="' +
       escapeHtml(posterUrl) +
@@ -265,6 +318,7 @@ function createCard(item) {
     '<div class="card-title-row">' +
     '<span class="card-marker" aria-hidden="true"></span>' +
     "<h2>" + escapeHtml(title) + "</h2>" +
+    saveButtonMarkup +
     "</div>" +
     '<div class="meta">' +
     "<span>Year: " + escapeHtml(year) + "</span>" +
@@ -408,7 +462,9 @@ function setShuffleButtonState(isVisible) {
 }
 
 function formatResultContextText(visibleCount, totalCount, mode) {
-  const suffix = mode === "shuffle" ? "shuffled candidates" : "matching candidates";
+  const suffix = mode === "shuffle"
+    ? (savedOnlyActive ? "shuffled saved candidates" : "shuffled candidates")
+    : (savedOnlyActive ? "saved candidates" : "matching candidates");
   return "Showing " + visibleCount + " of " + totalCount + " " + suffix + ".";
 }
 
@@ -434,6 +490,94 @@ function setShowMoreState(isVisible) {
   showMoreButton.hidden = !isVisible;
   showMoreButton.disabled = !isVisible;
   showMoreButton.textContent = "Show more";
+}
+
+function setSavedOnlyButtonState(isActive) {
+  if (!savedOnlyButton) {
+    return;
+  }
+
+  savedOnlyButton.setAttribute("aria-pressed", isActive ? "true" : "false");
+  savedOnlyButton.textContent = isActive ? "All results" : "View saved only";
+  savedOnlyButton.classList.toggle("is-active", isActive);
+}
+
+function toggleSavedTitle(candidateId) {
+  if (!candidateId) {
+    return;
+  }
+
+  if (savedTitleIds.has(candidateId)) {
+    savedTitleIds.delete(candidateId);
+  } else {
+    savedTitleIds.add(candidateId);
+  }
+
+  persistSavedTitleIds();
+
+  if (revealedOnce) {
+    renderRecommendations(currentResultMode, { preserveVisibleCount: true });
+  }
+}
+
+function isSavedCandidate(item) {
+  const candidateId = getCandidateSaveId(item);
+  return candidateId ? savedTitleIds.has(candidateId) : false;
+}
+
+function getCandidateSaveId(item) {
+  return String(item && item.id ? item.id : "");
+}
+
+function loadSavedTitleIds() {
+  const storage = getSafeLocalStorage();
+  if (!storage) {
+    return new Set();
+  }
+
+  try {
+    const raw = storage.getItem(SAVED_TITLES_STORAGE_KEY);
+    if (!raw) {
+      return new Set();
+    }
+
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) {
+      return new Set();
+    }
+
+    return new Set(parsed.map((value) => String(value).trim()).filter((value) => value !== ""));
+  } catch (error) {
+    return new Set();
+  }
+}
+
+function persistSavedTitleIds() {
+  const storage = getSafeLocalStorage();
+  if (!storage) {
+    return;
+  }
+
+  try {
+    storage.setItem(SAVED_TITLES_STORAGE_KEY, JSON.stringify(Array.from(savedTitleIds).sort()));
+  } catch (error) {
+    // Ignore storage failures so watchlist changes stay local to this session.
+  }
+}
+
+function getSafeLocalStorage() {
+  try {
+    if (typeof localStorage === "undefined") {
+      return null;
+    }
+
+    const probeKey = "__n1ghtvision_storage_probe__";
+    localStorage.setItem(probeKey, "1");
+    localStorage.removeItem(probeKey);
+    return localStorage;
+  } catch (error) {
+    return null;
+  }
 }
 
 function hasMatch(item, pluralKey, singularKey, selectedValue) {

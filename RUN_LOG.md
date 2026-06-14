@@ -1,5 +1,13 @@
 # Constellation Run Log
 
+- localStorage watchlist added.
+- Saved ids are stored locally only.
+- Save/Saved card control added.
+- Saved only toggle added.
+- No backend, account, or database added.
+- No data files changed.
+- No push or deploy performed.
+
 - Centered result-count display restored above the cards.
 - Count now updates for both normal and shuffled result modes.
 - No data files changed.
@@ -213,3 +221,18 @@
 - Backup checkpoint created at backups/constellation-v0.5-stable/.
 - Future UI or feature work can proceed from this checkpoint.
 - If something breaks, this backup can be used to compare or restore.
+- Watchlist UI refinement: the saved-view control was too chip-like and too close to the main action buttons.
+- Root cause: the saved-only toggle lived in the same compact action cluster and kept the saved-only layout/state too tightly coupled to the visible count.
+- Fix: moved the saved-view button to the right side of the action shell, renamed the states to "View saved only" and "All results", and made disabling saved-only restore the normal first results page for the same active filters.
+- No data files changed.
+- No push or deploy performed.
+- Watchlist UI refinement: the action-row status text was offset from center and the Save/Saved control still read like a small pill.
+- Root cause: the action shell was using a left-heavy flex layout, and the card save control lacked stronger tab-like styling.
+- Fix: switched the action shell to a three-zone layout with centered status text, and restyled the card Save/Saved control as a compact dark bookmark/tab inside the card info area.
+- No data files changed.
+- No push or deploy performed.
+- Watchlist UI refinement: the card Save/Saved control was softened from a heavy dark tab to a smaller glass-like pill.
+- Root cause: the previous card-level button styling was too strong for the softer card UI.
+- Fix: restyled the card Save/Saved control with a subtle translucent pill treatment while preserving the centered status row and right-aligned saved-view control.
+- No data files changed.
+- No push or deploy performed.

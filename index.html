@@ -68,9 +68,14 @@
         </div>
 
         <div class="actions">
-          <button id="reveal-button" type="button">Show results</button>
-          <button id="shuffle-button" type="button" hidden>Shuffle results</button>
+          <div class="actions-left">
+            <button id="reveal-button" type="button">Show results</button>
+            <button id="shuffle-button" type="button" hidden>Shuffle results</button>
+          </div>
           <p id="status" class="status" role="status" aria-live="polite"></p>
+          <div class="actions-right">
+            <button id="saved-only-button" type="button" aria-pressed="false">View saved only</button>
+          </div>
         </div>
       </section>
 
