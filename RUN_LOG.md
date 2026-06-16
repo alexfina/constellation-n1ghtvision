@@ -1,5 +1,12 @@
 # Constellation Run Log
 
+- shareable preset filter links added.
+- Valid params auto-run results.
+- Invalid params ignored safely.
+- Watchlist/localStorage unchanged.
+- No data change.
+- No push/deploy performed.
+
 - heart toggle button made into a perfect glass circle.
 - Inactive grey/slate and active pink-glow states preserved.
 - No data change.

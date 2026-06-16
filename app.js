@@ -66,6 +66,8 @@ async function init() {
     ].join("");
   }
 
+  const hasPresetFilters = applyUrlPresetFilters();
+
   setStatus("Choose filters, then reveal matching TMDB candidates.");
   setMainButtonState(false);
   setShuffleButtonState(false);
@@ -136,6 +138,11 @@ async function init() {
       renderVisibleResults();
     });
   }
+
+  if (hasPresetFilters) {
+    revealedOnce = true;
+    renderRecommendations("sorted");
+  }
 }
 
 async function loadRecommendations() {
@@ -185,6 +192,39 @@ function populateRegionSelect(select, values) {
     option.textContent = REGION_LABELS[value] || value;
     select.appendChild(option);
   });
+}
+
+function applyUrlPresetFilters() {
+  const params = new URLSearchParams(window.location.search);
+  let appliedCount = 0;
+
+  appliedCount += applyPresetFilter(regionSelect, params.get("region"));
+  appliedCount += applyPresetFilter(platformSelect, params.get("platform"));
+  appliedCount += applyPresetFilter(typeSelect, params.get("type"));
+  appliedCount += applyPresetFilter(formatSelect, params.get("format"));
+  appliedCount += applyPresetFilter(genreSelect, params.get("genre"));
+  appliedCount += applyPresetFilter(ratingSelect, params.get("rating"));
+
+  return appliedCount > 0;
+}
+
+function applyPresetFilter(select, value) {
+  if (!select || value === null || value === undefined) {
+    return 0;
+  }
+
+  const normalizedValue = String(value).trim();
+  if (normalizedValue === "") {
+    return 0;
+  }
+
+  const hasMatchingOption = Array.from(select.options).some((option) => option.value === normalizedValue);
+  if (!hasMatchingOption) {
+    return 0;
+  }
+
+  select.value = normalizedValue;
+  return 1;
 }
 
 function collectValues(items, keys, transform) {
