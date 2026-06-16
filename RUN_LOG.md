@@ -1,5 +1,12 @@
 # Constellation Run Log
 
+- current filter selections now generate/update shareable URL params.
+- All/default filters are omitted from the URL.
+- URL updates use replaceState.
+- Watchlist/localStorage unchanged.
+- No data change.
+- No push/deploy performed.
+
 - shareable preset filter links added.
 - Valid params auto-run results.
 - Invalid params ignored safely.

@@ -82,6 +82,8 @@ async function init() {
       } else {
         clearResults();
       }
+
+      syncFilterUrl();
     });
   });
 
@@ -225,6 +227,28 @@ function applyPresetFilter(select, value) {
 
   select.value = normalizedValue;
   return 1;
+}
+
+function syncFilterUrl() {
+  const params = new URLSearchParams();
+  addFilterParam(params, "region", regionSelect && regionSelect.value);
+  addFilterParam(params, "platform", platformSelect && platformSelect.value);
+  addFilterParam(params, "type", typeSelect && typeSelect.value);
+  addFilterParam(params, "format", formatSelect && formatSelect.value);
+  addFilterParam(params, "genre", genreSelect && genreSelect.value);
+  addFilterParam(params, "rating", ratingSelect && ratingSelect.value);
+
+  const nextUrl = params.toString() ? window.location.pathname + "?" + params.toString() + window.location.hash : window.location.pathname + window.location.hash;
+  window.history.replaceState(null, "", nextUrl);
+}
+
+function addFilterParam(params, key, value) {
+  const normalizedValue = String(value || "").trim();
+  if (normalizedValue === "") {
+    return;
+  }
+
+  params.set(key, normalizedValue);
 }
 
 function collectValues(items, keys, transform) {
