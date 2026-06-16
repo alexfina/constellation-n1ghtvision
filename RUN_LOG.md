@@ -1,5 +1,11 @@
 # Constellation Run Log
 
+- watchlist display persistence fix.
+- Saved view now rebuilds from localStorage saved IDs after data load.
+- App still defaults to Discover mode on startup.
+- No data change.
+- No push/deploy performed.
+
 - localStorage watchlist added.
 - Saved ids are stored locally only.
 - Save/Saved card control added.

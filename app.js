@@ -75,7 +75,7 @@ async function init() {
 
   [regionSelect, platformSelect, typeSelect, formatSelect, genreSelect, ratingSelect].filter(Boolean).forEach((select) => {
     select.addEventListener("change", () => {
-      if (revealedOnce) {
+      if (revealedOnce || savedOnlyActive) {
         renderRecommendations("sorted");
       } else {
         clearResults();
@@ -103,7 +103,7 @@ async function init() {
       savedOnlyActive = !savedOnlyActive;
       setSavedOnlyButtonState(savedOnlyActive);
 
-      if (revealedOnce) {
+      if (savedOnlyActive || revealedOnce) {
         renderRecommendations(savedOnlyActive ? currentResultMode : "sorted");
       } else {
         clearResults();
@@ -229,6 +229,21 @@ function renderRecommendations(mode = "sorted", options = {}) {
   });
 
   const filteredMatches = savedOnlyActive ? matches.filter((item) => isSavedCandidate(item)) : matches;
+
+  if (savedOnlyActive && savedTitleIds.size === 0) {
+    activeResults = [];
+    visibleResultCount = 0;
+    resultsGrid.dataset.resultCount = "0";
+    resultContextEl.textContent = "";
+    setShowMoreState(false, 0, 0);
+    showEmptyState(
+      "No saved titles yet.",
+      "Save titles from Discover mode to build your watchlist."
+    );
+    setStatus("No saved titles saved yet.");
+    return;
+  }
+
   currentResultMode = mode === "shuffle" ? "shuffle" : "sorted";
   const ordered = currentResultMode === "shuffle" ? shuffle(filteredMatches) : sortCandidates(filteredMatches);
 
@@ -241,13 +256,19 @@ function renderRecommendations(mode = "sorted", options = {}) {
     resultsGrid.dataset.resultCount = "0";
     resultContextEl.textContent = "";
     setShowMoreState(false, 0, 0);
-    showEmptyState(
-      savedOnlyActive ? "No saved titles match the current filters." : "No TMDB candidates found for this filter combination.",
-      savedOnlyActive
-        ? "Try saving a few titles first or turn off Saved only to browse the full filtered set."
-        : "Try another genre or platform. This candidate pool is still growing, so some combinations simply do not have matches yet."
-    );
-    setStatus(savedOnlyActive ? "No saved titles match the current selection." : "No matching TMDB candidates for the current selection.");
+    if (savedOnlyActive) {
+      showEmptyState(
+        "No saved titles match the current filters.",
+        "Try another filter combination or turn off Saved only to browse Discover mode."
+      );
+      setStatus("No saved titles match the current selection.");
+    } else {
+      showEmptyState(
+        "No TMDB candidates found for this filter combination.",
+        "Try another genre or platform. This candidate pool is still growing, so some combinations simply do not have matches yet."
+      );
+      setStatus("No matching TMDB candidates for the current selection.");
+    }
     return;
   }
 
