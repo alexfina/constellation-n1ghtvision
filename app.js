@@ -240,7 +240,7 @@ function renderRecommendations(mode = "sorted", options = {}) {
       "No saved titles yet.",
       "Save titles from Discover mode to build your watchlist."
     );
-    setStatus("No saved titles saved yet.");
+    setStatus("Watchlist: no saved titles yet.");
     return;
   }
 
@@ -280,11 +280,7 @@ function renderRecommendations(mode = "sorted", options = {}) {
     visibleResultCount = Math.min(INITIAL_RESULT_COUNT, activeResults.length);
   }
   renderVisibleResults();
-  setStatus(
-    currentResultMode === "shuffle"
-      ? "Showing " + activeResults.length + " shuffled matches"
-      : "Showing " + activeResults.length + " matches"
-  );
+  setStatus(getModeStatusText(activeResults.length, currentResultMode));
 }
 
 function createCard(item) {
@@ -519,8 +515,25 @@ function setSavedOnlyButtonState(isActive) {
   }
 
   savedOnlyButton.setAttribute("aria-pressed", isActive ? "true" : "false");
-  savedOnlyButton.textContent = isActive ? "All results" : "View saved only";
+  savedOnlyButton.setAttribute("aria-label", isActive ? "Hide watchlist" : "Show watchlist");
+  savedOnlyButton.setAttribute("title", isActive ? "Hide watchlist" : "Show watchlist");
   savedOnlyButton.classList.toggle("is-active", isActive);
+}
+
+function getModeStatusText(totalCount, mode) {
+  if (savedOnlyActive) {
+    return "Watchlist: " + formatCount(totalCount, "saved title", "saved titles");
+  }
+
+  if (mode === "shuffle") {
+    return "Showing " + formatCount(totalCount, "shuffled match", "shuffled matches");
+  }
+
+  return "Showing " + formatCount(totalCount, "match", "matches");
+}
+
+function formatCount(value, singular, plural) {
+  return value + " " + (value === 1 ? singular : plural);
 }
 
 function toggleSavedTitle(candidateId) {

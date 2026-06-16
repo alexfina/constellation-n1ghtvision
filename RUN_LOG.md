@@ -1,5 +1,22 @@
 # Constellation Run Log
 
+- heart toggle button made into a perfect glass circle.
+- Inactive grey/slate and active pink-glow states preserved.
+- No data change.
+- No push/deploy performed.
+
+- watchlist heart icon replaced with local Lucide SVG asset.
+- Inactive grey / active pink behavior preserved.
+- No data change.
+- No push/deploy performed.
+
+- watchlist text button replaced by heart icon toggle.
+- Grey inactive / pink active state added.
+- Status text clarifies Discover vs Watchlist mode.
+- Watchlist persistence preserved.
+- No data change.
+- No push/deploy performed.
+
 - watchlist display persistence fix.
 - Saved view now rebuilds from localStorage saved IDs after data load.
 - App still defaults to Discover mode on startup.
