@@ -1,5 +1,10 @@
 # Constellation Run Log
 
+- browser tab title updated to N1GHTVISION.
+- favicon added using local clapperboard SVG asset.
+- No data change.
+- No push/deploy performed.
+
 - current filter selections now generate/update shareable URL params.
 - All/default filters are omitted from the URL.
 - URL updates use replaceState.
