@@ -1,5 +1,16 @@
 # Constellation Run Log
 
+- Action buttons refined from white glass to a blue-glass hybrid.
+- Visual hierarchy improved.
+- No behavior change.
+- No data change.
+- No push/deploy performed.
+
+- Main action buttons tested with glass styling.
+- No behavior change.
+- No data change.
+- No push/deploy performed.
+
 - Dropdown arrow alignment refined across all custom filter buttons.
 - No behavior change.
 - No data change.

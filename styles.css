@@ -404,6 +404,41 @@ button {
     0 0 0 1px rgba(255, 255, 255, 0.1) inset;
 }
 
+.actions button,
+.results-actions button {
+  background:
+    linear-gradient(180deg, rgba(232, 240, 255, 0.9), rgba(198, 217, 255, 0.74)),
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.28), transparent 42%);
+  color: #10223d;
+  border: 1px solid rgba(109, 143, 233, 0.34);
+  box-shadow:
+    0 14px 28px rgba(48, 79, 163, 0.22),
+    0 0 0 1px rgba(255, 255, 255, 0.42) inset,
+    0 -1px 0 rgba(255, 255, 255, 0.12) inset;
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+}
+
+.actions button:hover,
+.actions button:focus-visible,
+.results-actions button:hover,
+.results-actions button:focus-visible {
+  background:
+    linear-gradient(180deg, rgba(239, 245, 255, 0.96), rgba(205, 223, 255, 0.82)),
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.36), transparent 42%);
+  border-color: rgba(109, 143, 233, 0.46);
+  box-shadow:
+    0 16px 32px rgba(48, 79, 163, 0.28),
+    0 0 0 3px rgba(109, 143, 233, 0.18),
+    0 1px 0 rgba(255, 255, 255, 0.56) inset,
+    0 -1px 0 rgba(255, 255, 255, 0.12) inset;
+}
+
+.actions button:active,
+.results-actions button:active {
+  transform: translateY(0);
+}
+
 button:hover {
   transform: translateY(-1px);
 }
