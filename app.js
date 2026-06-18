@@ -1,11 +1,29 @@
 const DATA_URL = "data/candidates.with-imdb.json";
 
-const regionSelect = document.getElementById("region-select");
-const platformSelect = document.getElementById("platform-select");
-const typeSelect = document.getElementById("type-select");
-const formatSelect = document.getElementById("format-select");
-const genreSelect = document.getElementById("genre-select");
-const ratingSelect = document.getElementById("rating-select");
+const regionControl = document.getElementById("region-select");
+const regionToggle = document.getElementById("region-toggle");
+const regionPanel = document.getElementById("region-panel");
+const regionSummaryEl = document.getElementById("region-summary");
+const platformControl = document.getElementById("platform-select");
+const platformToggle = document.getElementById("platform-toggle");
+const platformPanel = document.getElementById("platform-panel");
+const platformSummaryEl = document.getElementById("platform-summary");
+const typeControl = document.getElementById("type-select");
+const typeToggle = document.getElementById("type-toggle");
+const typePanel = document.getElementById("type-panel");
+const typeSummaryEl = document.getElementById("type-summary");
+const formatControl = document.getElementById("format-select");
+const formatToggle = document.getElementById("format-toggle");
+const formatPanel = document.getElementById("format-panel");
+const formatSummaryEl = document.getElementById("format-summary");
+const genreControl = document.getElementById("genre-select");
+const genreToggle = document.getElementById("genre-toggle");
+const genrePanel = document.getElementById("genre-panel");
+const genreSummaryEl = document.getElementById("genre-summary");
+const ratingControl = document.getElementById("rating-select");
+const ratingToggle = document.getElementById("rating-toggle");
+const ratingPanel = document.getElementById("rating-panel");
+const ratingSummaryEl = document.getElementById("rating-summary");
 const revealButton = document.getElementById("reveal-button");
 const shuffleButton = document.getElementById("shuffle-button");
 const savedOnlyButton = document.getElementById("saved-only-button");
@@ -33,6 +51,24 @@ let savedOnlyActive = false;
 let savedTitleIds = loadSavedTitleIds();
 let activeResults = [];
 let visibleResultCount = 0;
+let filterOptions = {
+  region: [],
+  platform: [],
+  type: [],
+  formatStyle: [],
+  rating: []
+};
+let selectedFilterValues = {
+  region: "",
+  platform: "",
+  type: "",
+  formatStyle: "",
+  rating: ""
+};
+let platformOptionValues = [];
+let selectedPlatforms = new Set();
+let genreOptionValues = [];
+let selectedGenres = new Set();
 const INITIAL_RESULT_COUNT = 12;
 const SHOW_MORE_INCREMENT = 12;
 
@@ -54,17 +90,12 @@ async function init() {
   const data = await loadRecommendations();
   recommendations = Array.isArray(data) ? data : data.recommendations ?? [];
 
-  populateRegionSelect(regionSelect, collectValues(recommendations, ["regions", "region"]));
-  populateSelect(platformSelect, collectValues(recommendations, ["platforms", "platform"], canonicalPlatformName));
-  populateSelect(genreSelect, collectValues(recommendations, ["genres", "genre"]));
-  if (ratingSelect) {
-    ratingSelect.innerHTML = [
-      '<option value="">All Ratings</option>',
-      '<option value="7">7.0+</option>',
-      '<option value="8">8.0+</option>',
-      '<option value="9">9.0+</option>',
-    ].join("");
-  }
+  populateSingleSelectControl(regionControl, regionPanel, regionSummaryEl, "region", collectValues(recommendations, ["regions", "region"]), { defaultLabel: "All Regions", displayValue: (value) => REGION_LABELS[value] || value });
+  populateSingleSelectControl(typeControl, typePanel, typeSummaryEl, "type", collectValues(recommendations, ["type", "mediaType"]), { defaultLabel: "All Types" });
+  populateSingleSelectControl(formatControl, formatPanel, formatSummaryEl, "formatStyle", collectValues(recommendations, ["formatStyle"]), { defaultLabel: "All Formats" });
+  populatePlatformControl(platformControl, platformPanel, platformSummaryEl, collectValues(recommendations, ["platforms", "platform"], canonicalPlatformName));
+  populateGenreControl(genreControl, collectValues(recommendations, ["genres", "genre"]));
+  populateSingleSelectControl(ratingControl, ratingPanel, ratingSummaryEl, "rating", ["7", "8", "9"], { defaultLabel: "All Ratings", displayValue: (value) => value + ".0+" });
 
   const hasPresetFilters = applyUrlPresetFilters();
 
@@ -75,8 +106,15 @@ async function init() {
   clearResults();
   setShowMoreState(false, 0, 0);
 
-  [regionSelect, platformSelect, typeSelect, formatSelect, genreSelect, ratingSelect].filter(Boolean).forEach((select) => {
-    select.addEventListener("change", () => {
+  setupDropdownControl(regionControl, regionToggle, regionPanel, "region");
+  setupDropdownControl(platformControl, platformToggle, platformPanel, "platform");
+  setupDropdownControl(typeControl, typeToggle, typePanel, "type");
+  setupDropdownControl(formatControl, formatToggle, formatPanel, "formatStyle");
+  setupDropdownControl(ratingControl, ratingToggle, ratingPanel, "rating");
+
+  if (platformToggle && platformPanel) {
+    platformPanel.addEventListener("change", () => {
+      updateSelectedPlatformsFromPanel();
       if (revealedOnce || savedOnlyActive) {
         renderRecommendations("sorted");
       } else {
@@ -85,7 +123,36 @@ async function init() {
 
       syncFilterUrl();
     });
-  });
+  }
+
+  if (genreToggle && genrePanel) {
+    genreToggle.addEventListener("click", () => {
+      toggleGenrePanel();
+    });
+
+    genrePanel.addEventListener("change", () => {
+      updateSelectedGenresFromPanel();
+      if (revealedOnce || savedOnlyActive) {
+        renderRecommendations("sorted");
+      } else {
+        clearResults();
+      }
+
+      syncFilterUrl();
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!genreControl || !genreControl.contains(event.target)) {
+        closeGenrePanel();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeGenrePanel();
+      }
+    });
+  }
 
   revealButton.addEventListener("click", () => {
     revealedOnce = true;
@@ -176,42 +243,164 @@ function populateSelect(select, values) {
   });
 }
 
-function populateRegionSelect(select, values) {
-  const options = ["", ...values].filter(Boolean);
-  select.innerHTML = "";
+function populateGenreControl(control, values) {
+  if (!genrePanel) {
+    return;
+  }
 
-  const defaultOption = document.createElement("option");
-  defaultOption.value = "";
-  defaultOption.textContent = "All Regions";
-  select.appendChild(defaultOption);
+  genreOptionValues = values.filter((value) => String(value || "").trim() !== "");
+  genrePanel.innerHTML = "";
 
-  options.forEach((value) => {
-    if (!value) {
-      return;
-    }
-    const option = document.createElement("option");
-    option.value = value;
-    option.textContent = REGION_LABELS[value] || value;
-    select.appendChild(option);
+  if (genreOptionValues.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "genre-panel-empty";
+    empty.textContent = "No genres available.";
+    genrePanel.appendChild(empty);
+    updateGenreSummary();
+    return;
+  }
+
+  const optionList = document.createElement("div");
+  optionList.className = "genre-option-list";
+
+  const hint = document.createElement("p");
+  hint.className = "genre-panel-hint";
+  hint.textContent = "choose one or more";
+  genrePanel.appendChild(hint);
+
+  genreOptionValues.forEach((value, index) => {
+    const optionId = "genre-option-" + String(index);
+    const option = document.createElement("label");
+    option.className = "genre-option";
+    option.setAttribute("for", optionId);
+
+    const checkbox = document.createElement("input");
+    checkbox.id = optionId;
+    checkbox.type = "checkbox";
+    checkbox.value = value;
+    checkbox.checked = selectedGenres.has(value);
+    checkbox.dataset.genreValue = value;
+
+    const text = document.createElement("span");
+    text.className = "genre-option-label";
+    text.textContent = value;
+
+    option.appendChild(checkbox);
+    option.appendChild(text);
+    optionList.appendChild(option);
   });
+
+  const actions = document.createElement("div");
+  actions.className = "genre-panel-actions";
+
+  const clearButton = document.createElement("button");
+  clearButton.type = "button";
+  clearButton.className = "genre-panel-action";
+  clearButton.textContent = "Clear";
+  clearButton.addEventListener("click", () => {
+    selectedGenres = new Set();
+    syncGenreSelectionUI();
+    if (revealedOnce || savedOnlyActive) {
+      renderRecommendations("sorted");
+    } else {
+      clearResults();
+    }
+    syncFilterUrl();
+  });
+
+  actions.appendChild(clearButton);
+  genrePanel.appendChild(optionList);
+  genrePanel.appendChild(actions);
+  syncGenreSelectionUI();
+}
+
+function populatePlatformControl(control, panel, summaryEl, values) {
+  if (!panel) {
+    return;
+  }
+
+  platformOptionValues = values.filter((value) => String(value || "").trim() !== "");
+  panel.innerHTML = "";
+
+  if (platformOptionValues.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "genre-panel-empty";
+    empty.textContent = "No platforms available.";
+    panel.appendChild(empty);
+    updatePlatformSummary();
+    return;
+  }
+
+  const optionList = document.createElement("div");
+  optionList.className = "genre-option-list";
+
+  const hint = document.createElement("p");
+  hint.className = "genre-panel-hint";
+  hint.textContent = "choose one or more";
+  panel.appendChild(hint);
+
+  platformOptionValues.forEach((value, index) => {
+    const optionId = "platform-option-" + String(index);
+    const option = document.createElement("label");
+    option.className = "genre-option";
+    option.setAttribute("for", optionId);
+
+    const checkbox = document.createElement("input");
+    checkbox.id = optionId;
+    checkbox.type = "checkbox";
+    checkbox.value = value;
+    checkbox.checked = selectedPlatforms.has(value);
+    checkbox.dataset.platformValue = value;
+
+    const text = document.createElement("span");
+    text.className = "genre-option-label";
+    text.textContent = value;
+
+    option.appendChild(checkbox);
+    option.appendChild(text);
+    optionList.appendChild(option);
+  });
+
+  const actions = document.createElement("div");
+  actions.className = "genre-panel-actions";
+
+  const clearButton = document.createElement("button");
+  clearButton.type = "button";
+  clearButton.className = "genre-panel-action";
+  clearButton.textContent = "Clear";
+  clearButton.addEventListener("click", () => {
+    selectedPlatforms = new Set();
+    syncPlatformSelectionUI();
+    if (revealedOnce || savedOnlyActive) {
+      renderRecommendations("sorted");
+    } else {
+      clearResults();
+    }
+    syncFilterUrl();
+  });
+
+  actions.appendChild(clearButton);
+  panel.appendChild(optionList);
+  panel.appendChild(actions);
+  updatePlatformSummary();
 }
 
 function applyUrlPresetFilters() {
   const params = new URLSearchParams(window.location.search);
   let appliedCount = 0;
 
-  appliedCount += applyPresetFilter(regionSelect, params.get("region"));
-  appliedCount += applyPresetFilter(platformSelect, params.get("platform"));
-  appliedCount += applyPresetFilter(typeSelect, params.get("type"));
-  appliedCount += applyPresetFilter(formatSelect, params.get("format"));
-  appliedCount += applyPresetFilter(genreSelect, params.get("genre"));
-  appliedCount += applyPresetFilter(ratingSelect, params.get("rating"));
+  appliedCount += applyPresetFilterValue("region", params.get("region"));
+  appliedCount += applyPresetFilterValue("type", params.get("type"));
+  appliedCount += applyPresetFilterValue("formatStyle", params.get("format"));
+  appliedCount += applyPresetPlatforms(params.getAll("platform"));
+  appliedCount += applyPresetGenres(params.getAll("genre"));
+  appliedCount += applyPresetFilterValue("rating", params.get("rating"));
 
   return appliedCount > 0;
 }
 
-function applyPresetFilter(select, value) {
-  if (!select || value === null || value === undefined) {
+function applyPresetFilterValue(key, value) {
+  if (value === null || value === undefined) {
     return 0;
   }
 
@@ -220,23 +409,25 @@ function applyPresetFilter(select, value) {
     return 0;
   }
 
-  const hasMatchingOption = Array.from(select.options).some((option) => option.value === normalizedValue);
+  const allowedValues = filterOptions[key] || [];
+  const hasMatchingOption = allowedValues.some((option) => option.value === normalizedValue);
   if (!hasMatchingOption) {
     return 0;
   }
 
-  select.value = normalizedValue;
+  selectedFilterValues[key] = normalizedValue;
+  syncSingleSelectUI(key);
   return 1;
 }
 
 function syncFilterUrl() {
   const params = new URLSearchParams();
-  addFilterParam(params, "region", regionSelect && regionSelect.value);
-  addFilterParam(params, "platform", platformSelect && platformSelect.value);
-  addFilterParam(params, "type", typeSelect && typeSelect.value);
-  addFilterParam(params, "format", formatSelect && formatSelect.value);
-  addFilterParam(params, "genre", genreSelect && genreSelect.value);
-  addFilterParam(params, "rating", ratingSelect && ratingSelect.value);
+  addFilterParam(params, "region", selectedFilterValues.region);
+  addFilterParam(params, "type", selectedFilterValues.type);
+  addFilterParam(params, "format", selectedFilterValues.formatStyle);
+  addPlatformParams(params, getSelectedPlatformValues());
+  addGenreParams(params, getSelectedGenreValues());
+  addFilterParam(params, "rating", selectedFilterValues.rating);
 
   const nextUrl = params.toString() ? window.location.pathname + "?" + params.toString() + window.location.hash : window.location.pathname + window.location.hash;
   window.history.replaceState(null, "", nextUrl);
@@ -249,6 +440,28 @@ function addFilterParam(params, key, value) {
   }
 
   params.set(key, normalizedValue);
+}
+
+function addGenreParams(params, values) {
+  asArray(values).forEach((value) => {
+    const normalizedValue = String(value || "").trim();
+    if (normalizedValue === "") {
+      return;
+    }
+
+    params.append("genre", normalizedValue);
+  });
+}
+
+function addPlatformParams(params, values) {
+  asArray(values).forEach((value) => {
+    const normalizedValue = String(value || "").trim();
+    if (normalizedValue === "") {
+      return;
+    }
+
+    params.append("platform", normalizedValue);
+  });
 }
 
 function collectValues(items, keys, transform) {
@@ -269,12 +482,12 @@ function collectValues(items, keys, transform) {
 }
 
 function renderRecommendations(mode = "sorted", options = {}) {
-  const selectedRegion = regionSelect.value;
-  const selectedPlatform = platformSelect.value;
-  const selectedType = typeSelect ? typeSelect.value : "";
-  const selectedFormat = formatSelect ? formatSelect.value : "";
-  const selectedGenre = genreSelect.value;
-  const selectedRating = ratingSelect ? Number(ratingSelect.value) : 0;
+  const selectedRegion = selectedFilterValues.region;
+  const selectedPlatformValues = getSelectedPlatformValues();
+  const selectedType = selectedFilterValues.type;
+  const selectedFormat = selectedFilterValues.formatStyle;
+  const selectedGenreValues = getSelectedGenreValues();
+  const selectedRating = Number(selectedFilterValues.rating || 0);
 
   const matches = recommendations.filter((item) => {
     if (!item || item.verified !== false) {
@@ -285,10 +498,10 @@ function renderRecommendations(mode = "sorted", options = {}) {
       return false;
     }
 
-    return hasAvailabilityMatch(item, selectedRegion, selectedPlatform)
+    return hasAvailabilityMatch(item, selectedRegion, selectedPlatformValues)
       && hasMatch(item, "type", "type", selectedType)
       && hasMatch(item, "formatStyle", "formatStyle", selectedFormat)
-      && hasMatch(item, "genres", "genre", selectedGenre)
+      && hasGenreMatch(item, selectedGenreValues)
       && hasMinimumRating(item, selectedRating);
   });
 
@@ -687,19 +900,199 @@ function hasMatch(item, pluralKey, singularKey, selectedValue) {
   return values.indexOf(selectedValue) !== -1;
 }
 
+function hasGenreMatch(item, selectedGenresToMatch) {
+  if (!Array.isArray(selectedGenresToMatch) || selectedGenresToMatch.length === 0) {
+    return true;
+  }
+
+  const values = asArray(item && (item.genres || item.genre))
+    .map((value) => String(value).trim())
+    .filter((value) => value !== "");
+
+  if (values.length === 0) {
+    return false;
+  }
+
+  const selectedSet = new Set(selectedGenresToMatch.map((value) => String(value).trim()).filter((value) => value !== ""));
+  return values.some((value) => selectedSet.has(value));
+}
+
+function populateSingleSelectControl(control, panel, summaryEl, key, values, options = {}) {
+  const defaultLabel = options.defaultLabel || "All";
+  const displayValue = typeof options.displayValue === "function" ? options.displayValue : (value) => value;
+  const normalizedValues = Array.isArray(values) ? values.map((value) => String(value || "").trim()).filter((value) => value !== "") : [];
+  const optionList = [];
+  const seen = new Set();
+
+  if (!filterOptions[key]) {
+    filterOptions[key] = [];
+  }
+
+  filterOptions[key] = [];
+  normalizedValues.forEach((value) => {
+    if (seen.has(value)) {
+      return;
+    }
+    seen.add(value);
+    filterOptions[key].push({ value, label: displayValue(value) });
+  });
+
+  if (panel) {
+    panel.innerHTML = "";
+    const list = document.createElement("div");
+    list.className = "genre-option-list";
+
+    const allItem = createSingleSelectOption(key, "", defaultLabel);
+    list.appendChild(allItem);
+
+    filterOptions[key].forEach((entry) => {
+      list.appendChild(createSingleSelectOption(key, entry.value, entry.label));
+    });
+
+    panel.appendChild(list);
+  }
+
+  selectedFilterValues[key] = selectedFilterValues[key] || "";
+  if (summaryEl) {
+    updateSingleSelectSummary(key, defaultLabel, summaryEl);
+  }
+}
+
+function createSingleSelectOption(key, value, label) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "genre-option genre-option-button";
+  button.dataset.filterKey = key;
+  button.dataset.filterValue = value;
+  button.textContent = label;
+  button.addEventListener("click", () => {
+    selectedFilterValues[key] = value;
+    syncSingleSelectUI(key);
+    closeDropdownPanel(key);
+    if (revealedOnce || savedOnlyActive) {
+      renderRecommendations("sorted");
+    } else {
+      clearResults();
+    }
+    syncFilterUrl();
+  });
+  return button;
+}
+
+function setupDropdownControl(control, toggle, panel, key) {
+  if (!control || !toggle || !panel) {
+    return;
+  }
+
+  toggle.addEventListener("click", () => {
+    const isOpen = control.classList.contains("is-open");
+    if (isOpen) {
+      closeDropdownPanel(key);
+    } else {
+      openDropdownPanel(key);
+    }
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!control.contains(event.target)) {
+      closeDropdownPanel(key);
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeDropdownPanel(key);
+    }
+  });
+}
+
+function syncSingleSelectUI(key) {
+  const config = getDropdownConfig(key);
+  if (!config) {
+    return;
+  }
+
+  const selectedValue = selectedFilterValues[key] || "";
+  const buttons = Array.from(config.panel.querySelectorAll("button[data-filter-value]"));
+  buttons.forEach((button) => {
+    const isSelected = button.dataset.filterValue === selectedValue;
+    button.classList.toggle("is-selected", isSelected);
+    button.setAttribute("aria-pressed", isSelected ? "true" : "false");
+  });
+
+  updateSingleSelectSummary(key, config.defaultLabel, config.summaryEl);
+}
+
+function updateSingleSelectSummary(key, defaultLabel, summaryEl) {
+  if (!summaryEl) {
+    return;
+  }
+
+  const selectedValue = selectedFilterValues[key] || "";
+  if (!selectedValue) {
+    summaryEl.textContent = defaultLabel;
+    return;
+  }
+
+  const config = getDropdownConfig(key);
+  const entry = config && config.options.find((item) => item.value === selectedValue);
+  summaryEl.textContent = entry ? entry.label : selectedValue;
+}
+
+function openDropdownPanel(key) {
+  const config = getDropdownConfig(key);
+  if (!config) {
+    return;
+  }
+
+  config.panel.hidden = false;
+  config.control.classList.add("is-open");
+  config.toggle.setAttribute("aria-expanded", "true");
+}
+
+function closeDropdownPanel(key) {
+  const config = getDropdownConfig(key);
+  if (!config) {
+    return;
+  }
+
+  config.panel.hidden = true;
+  config.control.classList.remove("is-open");
+  config.toggle.setAttribute("aria-expanded", "false");
+}
+
+function closeAllDropdownPanels() {
+  ["region", "platform", "type", "formatStyle", "rating", "genre"].forEach((key) => closeDropdownPanel(key));
+}
+
+function getDropdownConfig(key) {
+  const map = {
+    region: { control: regionControl, toggle: regionToggle, panel: regionPanel, summaryEl: regionSummaryEl, defaultLabel: "All Regions", options: filterOptions.region || [] },
+    platform: { control: platformControl, toggle: platformToggle, panel: platformPanel, summaryEl: platformSummaryEl, defaultLabel: "All Platforms", options: filterOptions.platform || [] },
+    type: { control: typeControl, toggle: typeToggle, panel: typePanel, summaryEl: typeSummaryEl, defaultLabel: "All Types", options: filterOptions.type || [] },
+    formatStyle: { control: formatControl, toggle: formatToggle, panel: formatPanel, summaryEl: formatSummaryEl, defaultLabel: "All Formats", options: filterOptions.formatStyle || [] },
+    rating: { control: ratingControl, toggle: ratingToggle, panel: ratingPanel, summaryEl: ratingSummaryEl, defaultLabel: "All Ratings", options: filterOptions.rating || [] },
+    genre: { control: genreControl, toggle: genreToggle, panel: genrePanel, summaryEl: genreSummaryEl, defaultLabel: "All Genres", options: genreOptionValues.map((value) => ({ value, label: value })) }
+  };
+
+  return map[key] || null;
+}
+
 function hasAvailabilityMatch(item, selectedRegion, selectedPlatform) {
-  if (!selectedRegion && !selectedPlatform) {
+  if (!selectedRegion && (!Array.isArray(selectedPlatform) || selectedPlatform.length === 0)) {
     return true;
   }
 
   const availability = Array.isArray(item && item.availability) ? item.availability : [];
+  const selectedPlatformSet = new Set(asArray(selectedPlatform).map((value) => String(value).trim()).filter((value) => value !== ""));
   return availability.some((entry) => {
     if (!entry) {
       return false;
     }
 
     const regionMatches = !selectedRegion || entry.region === selectedRegion;
-    const platformMatches = !selectedPlatform || canonicalPlatformName(entry.platform) === selectedPlatform;
+    const platformName = canonicalPlatformName(entry.platform);
+    const platformMatches = selectedPlatformSet.size === 0 || selectedPlatformSet.has(platformName);
     return regionMatches && platformMatches;
   });
 }
@@ -711,6 +1104,248 @@ function hasMinimumRating(item, threshold) {
 
   const numeric = getEffectiveRating(item);
   return Number.isFinite(numeric) && numeric >= threshold;
+}
+
+function applyPresetGenres(values) {
+  if (!Array.isArray(values) || values.length === 0) {
+    selectedGenres = new Set();
+    syncGenreSelectionUI();
+    return 0;
+  }
+
+  const allowed = new Map(genreOptionValues.map((value) => [normalizeText(value), value]));
+  const nextSelected = [];
+  const seen = new Set();
+
+  values.forEach((rawValue) => {
+    const normalizedValue = String(rawValue || "").trim();
+    if (normalizedValue === "") {
+      return;
+    }
+
+    const resolvedValue = allowed.get(normalizeText(normalizedValue));
+    if (!resolvedValue || seen.has(normalizeText(resolvedValue))) {
+      return;
+    }
+
+    seen.add(normalizeText(resolvedValue));
+    nextSelected.push(resolvedValue);
+  });
+
+  selectedGenres = new Set(nextSelected);
+  syncGenreSelectionUI();
+  return nextSelected.length > 0 ? 1 : 0;
+}
+
+function applyPresetPlatforms(values) {
+  if (!Array.isArray(values) || values.length === 0) {
+    selectedPlatforms = new Set();
+    updatePlatformSummary();
+    return 0;
+  }
+
+  const allowed = new Map(platformOptionValues.map((value) => [normalizeText(value), value]));
+  const nextSelected = [];
+  const seen = new Set();
+
+  values.forEach((rawValue) => {
+    const normalizedValue = String(rawValue || "").trim();
+    if (normalizedValue === "") {
+      return;
+    }
+
+    const resolvedValue = allowed.get(normalizeText(normalizedValue));
+    if (!resolvedValue || seen.has(normalizeText(resolvedValue))) {
+      return;
+    }
+
+    seen.add(normalizeText(resolvedValue));
+    nextSelected.push(resolvedValue);
+  });
+
+  selectedPlatforms = new Set(nextSelected);
+  syncPlatformSelectionUI();
+  return nextSelected.length > 0 ? 1 : 0;
+}
+
+function getSelectedPlatformValues() {
+  return platformOptionValues.filter((value) => selectedPlatforms.has(value));
+}
+
+function syncPlatformSelectionUI() {
+  if (!platformPanel) {
+    updatePlatformSummary();
+    return;
+  }
+
+  const selected = selectedPlatforms;
+  Array.from(platformPanel.querySelectorAll('input[type="checkbox"][data-platform-value]')).forEach((input) => {
+    input.checked = selected.has(input.value);
+  });
+
+  updatePlatformSummary();
+}
+
+function updateSelectedPlatformsFromPanel() {
+  if (!platformPanel) {
+    selectedPlatforms = new Set();
+    updatePlatformSummary();
+    return;
+  }
+
+  const nextSelected = Array.from(platformPanel.querySelectorAll('input[type="checkbox"][data-platform-value]'))
+    .filter((input) => input.checked)
+    .map((input) => input.value);
+
+  selectedPlatforms = new Set(nextSelected);
+  updatePlatformSummary();
+}
+
+function updatePlatformSummary() {
+  if (!platformSummaryEl) {
+    return;
+  }
+
+  const values = getSelectedPlatformValues();
+  if (values.length === 0) {
+    platformSummaryEl.textContent = "All Platforms";
+    return;
+  }
+
+  if (values.length === 1) {
+    platformSummaryEl.textContent = values[0];
+    return;
+  }
+
+  if (values.length === 2) {
+    platformSummaryEl.textContent = values[0] + " + " + values[1];
+    return;
+  }
+
+  platformSummaryEl.textContent = values.length + " Platforms selected";
+}
+
+function togglePlatformPanel() {
+  if (!platformPanel || !platformToggle || !platformControl) {
+    return;
+  }
+
+  const isOpen = !platformControl.classList.contains("is-open");
+  if (isOpen) {
+    openPlatformPanel();
+  } else {
+    closePlatformPanel();
+  }
+}
+
+function openPlatformPanel() {
+  if (!platformPanel || !platformToggle || !platformControl) {
+    return;
+  }
+
+  platformPanel.hidden = false;
+  platformControl.classList.add("is-open");
+  platformToggle.setAttribute("aria-expanded", "true");
+}
+
+function closePlatformPanel() {
+  if (!platformPanel || !platformToggle || !platformControl) {
+    return;
+  }
+
+  platformPanel.hidden = true;
+  platformControl.classList.remove("is-open");
+  platformToggle.setAttribute("aria-expanded", "false");
+}
+
+function getSelectedGenreValues() {
+  return genreOptionValues.filter((value) => selectedGenres.has(value));
+}
+
+function syncGenreSelectionUI() {
+  if (!genrePanel) {
+    updateGenreSummary();
+    return;
+  }
+
+  const selected = selectedGenres;
+  Array.from(genrePanel.querySelectorAll('input[type="checkbox"][data-genre-value]')).forEach((input) => {
+    input.checked = selected.has(input.value);
+  });
+
+  updateGenreSummary();
+}
+
+function updateSelectedGenresFromPanel() {
+  if (!genrePanel) {
+    selectedGenres = new Set();
+    updateGenreSummary();
+    return;
+  }
+
+  const nextSelected = Array.from(genrePanel.querySelectorAll('input[type="checkbox"][data-genre-value]'))
+    .filter((input) => input.checked)
+    .map((input) => input.value);
+
+  selectedGenres = new Set(nextSelected);
+  updateGenreSummary();
+}
+
+function updateGenreSummary() {
+  if (!genreSummaryEl) {
+    return;
+  }
+
+  const values = getSelectedGenreValues();
+  if (values.length === 0) {
+    genreSummaryEl.textContent = "All Genres";
+    return;
+  }
+
+  if (values.length === 1) {
+    genreSummaryEl.textContent = values[0];
+    return;
+  }
+
+  if (values.length === 2) {
+    genreSummaryEl.textContent = values[0] + " + " + values[1];
+    return;
+  }
+
+  genreSummaryEl.textContent = values.length + " Genres selected";
+}
+
+function toggleGenrePanel() {
+  if (!genrePanel || !genreToggle || !genreControl) {
+    return;
+  }
+
+  const isOpen = !genreControl.classList.contains("is-open");
+  if (isOpen) {
+    openGenrePanel();
+  } else {
+    closeGenrePanel();
+  }
+}
+
+function openGenrePanel() {
+  if (!genrePanel || !genreToggle || !genreControl) {
+    return;
+  }
+
+  genrePanel.hidden = false;
+  genreControl.classList.add("is-open");
+  genreToggle.setAttribute("aria-expanded", "true");
+}
+
+function closeGenrePanel() {
+  if (!genrePanel || !genreToggle || !genreControl) {
+    return;
+  }
+
+  genrePanel.hidden = true;
+  genreControl.classList.remove("is-open");
+  genreToggle.setAttribute("aria-expanded", "false");
 }
 
 function getEffectiveRating(item) {

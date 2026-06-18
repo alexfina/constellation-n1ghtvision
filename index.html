@@ -17,55 +17,65 @@
 
       <section class="panel" aria-label="Recommendation filters">
         <div class="filters">
-          <label class="field">
+          <div class="field custom-dropdown-field">
             <span>Region</span>
-            <select id="region-select" name="region">
-              <option value="">Loading regions...</option>
-            </select>
-          </label>
+            <div id="region-select" class="custom-dropdown" data-dropdown-name="region">
+              <button id="region-toggle" class="genre-toggle custom-dropdown-toggle" type="button" aria-expanded="false" aria-controls="region-panel">
+                <span id="region-summary">Loading regions...</span>
+              </button>
+              <div id="region-panel" class="genre-panel custom-dropdown-panel" hidden></div>
+            </div>
+          </div>
 
-          <label class="field">
+          <div class="field custom-dropdown-field">
             <span>Platform</span>
-            <select id="platform-select" name="platform">
-              <option value="">Loading platforms...</option>
-            </select>
-          </label>
+            <div id="platform-select" class="custom-dropdown" data-dropdown-name="platform">
+              <button id="platform-toggle" class="genre-toggle custom-dropdown-toggle" type="button" aria-expanded="false" aria-controls="platform-panel">
+                <span id="platform-summary">Loading platforms...</span>
+              </button>
+              <div id="platform-panel" class="genre-panel custom-dropdown-panel" hidden></div>
+            </div>
+          </div>
 
-          <label class="field">
+          <div class="field custom-dropdown-field">
             <span>Type</span>
-            <select id="type-select" name="type">
-              <option value="">All Types</option>
-              <option value="movie">Movies</option>
-              <option value="series">Series</option>
-            </select>
-          </label>
+            <div id="type-select" class="custom-dropdown" data-dropdown-name="type">
+              <button id="type-toggle" class="genre-toggle custom-dropdown-toggle" type="button" aria-expanded="false" aria-controls="type-panel">
+                <span id="type-summary">All Types</span>
+              </button>
+              <div id="type-panel" class="genre-panel custom-dropdown-panel" hidden></div>
+            </div>
+          </div>
 
-          <label class="field">
+          <div class="field custom-dropdown-field">
             <span>Format / Style</span>
-            <select id="format-select" name="formatStyle">
-              <option value="">All Formats</option>
-              <option value="Live Action">Live Action</option>
-              <option value="Anime">Anime</option>
-              <option value="Documentary">Documentary</option>
-            </select>
-          </label>
+            <div id="format-select" class="custom-dropdown" data-dropdown-name="formatStyle">
+              <button id="format-toggle" class="genre-toggle custom-dropdown-toggle" type="button" aria-expanded="false" aria-controls="format-panel">
+                <span id="format-summary">All Formats</span>
+              </button>
+              <div id="format-panel" class="genre-panel custom-dropdown-panel" hidden></div>
+            </div>
+          </div>
 
-          <label class="field">
+          <div class="field genre-field">
             <span>Genre</span>
-            <select id="genre-select" name="genre">
-              <option value="">Loading genres...</option>
-            </select>
-          </label>
+            <div id="genre-select" class="genre-control">
+              <button id="genre-toggle" class="genre-toggle" type="button" aria-expanded="false" aria-controls="genre-panel">
+                <span id="genre-summary">Loading genres...</span>
+              </button>
+              <div id="genre-panel" class="genre-panel" hidden></div>
+            </div>
+          </div>
 
-          <label class="field">
+          <div class="field custom-dropdown-field">
             <span>Rating</span>
-            <select id="rating-select" name="rating">
-              <option value="">All Ratings</option>
-              <option value="7">7.0+</option>
-              <option value="8">8.0+</option>
-              <option value="9">9.0+</option>
-            </select>
-          </label>
+            <div id="rating-select" class="custom-dropdown" data-dropdown-name="rating">
+              <button id="rating-toggle" class="genre-toggle custom-dropdown-toggle" type="button" aria-expanded="false" aria-controls="rating-panel">
+                <span id="rating-summary">All Ratings</span>
+              </button>
+              <div id="rating-panel" class="genre-panel custom-dropdown-panel" hidden></div>
+            </div>
+          </div>
         </div>
 
         <div class="actions">

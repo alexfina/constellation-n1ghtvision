@@ -1,5 +1,47 @@
 # Constellation Run Log
 
+- Dropdown arrow alignment refined across all custom filter buttons.
+- No behavior change.
+- No data change.
+- No push/deploy performed.
+
+- Multi-select helper text moved into Platform/Genre dropdown panels.
+- Main filter shell labels cleaned up.
+- No behavior change.
+- No data change.
+- No push/deploy performed.
+
+- Subtle multi-select helper text added for Platform and Genre.
+- No behavior change.
+- No data change.
+- No push/deploy performed.
+
+- Platform converted to multi-select.
+- Platform OR logic added.
+- Repeated platform URL params supported.
+- Old single-platform URLs remain compatible.
+- No data change.
+- No push/deploy performed.
+
+- All filters migrated to consistent custom dropdown UI.
+- Genre remains multi-select OR logic.
+- Other filters remain single-select.
+- URL/filter/watchlist behavior preserved.
+- No data change.
+- No push/deploy performed.
+
+- Genre dropdown layering fixed.
+- Custom dropdown UI audit started for other filters.
+- No data change.
+- No push/deploy performed.
+
+- Genre filter converted to multi-select.
+- OR logic added for selected genres.
+- Repeated genre URL params supported.
+- Old single-genre URLs remain compatible.
+- No data change.
+- No push/deploy performed.
+
 - browser tab title updated to N1GHTVISION.
 - favicon added using local clapperboard SVG asset.
 - No data change.
