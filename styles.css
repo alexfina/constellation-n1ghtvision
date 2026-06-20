@@ -1050,28 +1050,26 @@ button:hover {
 @media (max-width: 800px) {
   body {
     background:
-      linear-gradient(180deg, rgba(3, 5, 10, 0.08), rgba(3, 5, 10, 0.16)),
-      linear-gradient(180deg, rgba(2, 3, 7, 0.12), rgba(2, 3, 7, 0.22));
+      radial-gradient(1200px 760px at 82% 18%, rgba(255, 246, 235, 0.88), transparent 56%),
+      radial-gradient(920px 640px at 14% 86%, rgba(218, 232, 255, 0.8), transparent 60%),
+      radial-gradient(780px 540px at 72% 72%, rgba(255, 228, 214, 0.6), transparent 62%),
+      linear-gradient(180deg, #f3efe9 0%, #e9edf4 48%, #f0e8eb 100%);
   }
 
   body::before {
     background:
-      url("assets/backgrounds/constellation-bg-v1.png") 66% 34% / cover no-repeat,
-      radial-gradient(1200px 760px at 84% 16%, rgba(255, 164, 76, 0.18), transparent 62%),
-      radial-gradient(1000px 680px at 16% 84%, rgba(255, 126, 52, 0.12), transparent 64%),
-      linear-gradient(180deg, rgba(2, 3, 7, 0.1), rgba(2, 3, 7, 0.18));
-    opacity: 0.82;
-    mix-blend-mode: normal;
-    transform: translateZ(0);
-    will-change: transform;
+      radial-gradient(1100px 760px at 76% 18%, rgba(255, 255, 255, 0.34), transparent 60%),
+      radial-gradient(900px 620px at 18% 84%, rgba(255, 255, 255, 0.18), transparent 64%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(244, 239, 230, 0.1));
+    opacity: 0.9;
+    mix-blend-mode: soft-light;
   }
 
   body::after {
     background:
-      linear-gradient(90deg, rgba(3, 5, 10, 0.12) 0%, rgba(3, 5, 10, 0.04) 14%, transparent 34%),
-      linear-gradient(180deg, rgba(2, 3, 7, 0.04), rgba(2, 3, 7, 0.08)),
-      radial-gradient(closest-side at 50% 38%, rgba(255, 255, 255, 0.02), transparent 72%);
-    opacity: 0.42;
+      linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(235, 239, 246, 0.04)),
+      radial-gradient(closest-side at 50% 40%, rgba(255, 255, 255, 0.22), transparent 72%);
+    opacity: 0.52;
     mix-blend-mode: normal;
   }
 

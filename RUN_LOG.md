@@ -1,5 +1,18 @@
 # Constellation Run Log
 
+- mobile gradient background slightly darkened for panel contrast
+- desktop unchanged
+- no behavior change
+- no data change
+- no push/deploy
+
+- mobile image background replaced with stable gradient fallback
+- real-device crop/vertical-line issue addressed
+- desktop unchanged
+- no behavior change
+- no data change
+- no push/deploy
+
 - mobile left-side shadow/mask softened or removed
 - mobile background stability preserved
 - desktop unchanged
