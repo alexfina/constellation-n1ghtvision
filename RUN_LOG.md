@@ -1,5 +1,27 @@
 # Constellation Run Log
 
+- mobile left-side shadow/mask softened or removed
+- mobile background stability preserved
+- desktop unchanged
+- no behavior change
+- no data change
+- no push/deploy
+
+- distracting mobile left decoration reduced/hidden
+- mobile background zoom/shift on results render addressed
+- desktop unchanged
+- no behavior change
+- no data change
+- no push/deploy
+
+- mobile background position/stability adjusted
+- distracting vertical line reduced/removed on mobile
+- mobile zoom/shift behavior addressed
+- desktop unchanged
+- no behavior change
+- no data change
+- no push/deploy
+
 - Action buttons refined from white glass to a blue-glass hybrid.
 - Visual hierarchy improved.
 - No behavior change.
